@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/admin/adminHeader::html('用户权限管理')">
+</head>
+<!--<script src="webjars/jquery/2.0.0/jquery.min.js"></script>-->
+<!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
+<!--<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>-->
+
+
+<body>
+<div id="workingArea" class="container-fluid">
+    <!--导航栏-->
+    <div th:replace="include/admin/adminNavigator::html"></div>
+
+    <!--左侧折叠菜单-->
+    <div th:include="include/admin/adminLeftMenu::html"></div>
+
+    <div class="col-md-10">
+        <table class="table table-bordered table-responsive ">
+            <thead>
+            <tr>
+                <th>账号</th>
+                <th>密码</th>
+                <th>昵称</th>
+                <th>手机号</th>
+                <th>角色</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="bean in beans">
+                <td>{{bean.email}}</td>
+                <td>{{bean.password}}</td>
+                <td>{{bean.name}}</td>
+                <td>{{bean.phone}}</td>
+                <td>{{bean.role}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:replace="include/admin/adminPage::html"></div>
+    </div>
+
+    <div th:replace="include/admin/adminFoot::html"></div>
+</div>
+</body>
+
+<script>
+    var data4Vue = {
+        uri: "user",
+        pagination: {},
+        beans: [],
+        bean: {id: 0, email: "", password: "", portrait: "", name: "", phone: "", role: ""},
+    };
+
+    var vue = new Vue({
+        el: "#workingArea",
+        data: data4Vue,
+        mounted: function () {
+            this.list(0);
+        },
+        methods: {
+            list: function (start) {
+                var url = this.uri + "?start=" + start;
+                axios.get(url).then(function (response) {
+                    vue.beans = response.data.data.content;
+                    vue.pagination = response.data.data;
+                })
+            }
+        }
+    })
+</script>
+</html>
