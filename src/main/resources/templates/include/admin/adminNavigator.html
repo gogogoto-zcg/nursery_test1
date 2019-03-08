@@ -1,0 +1,23 @@
+<div class="navitagorDiv" th:fragment="html()" xmlns:th="http://www.thymeleaf.org">
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1"><span class="sr-only">Toggle navigation</span><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+            <a class="navbar-brand" href="#">社会托管后台</a>
+        </div>
+        <div class="navbar-right">
+            <a href="logout" class="navbar-brand">
+                <span th:if="null!=${session.user.portrait}"><img height="30px"
+                                                                  width="30px"
+                                                                  th:src="'img/user/'+${session.user.portrait}"
+                                                                  class="img-circle"></span>
+                <!--当用户没有自己设置头像时使用默认-->
+                <span th:unless="null!=${session.user.portrait}"><img height="30px"
+                                                                      width="30px"
+                                                                      th:src="'img/default/default4.jpg'"
+                                                                      class="img-circle"></span>
+                <span class="glyphicon glyphicon-log-in"></span></a>
+        </div>
+    </nav>
+</div>

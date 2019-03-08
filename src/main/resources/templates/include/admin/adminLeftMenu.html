@@ -1,0 +1,64 @@
+<div  th:fragment="html" xmlns:th="http://www.thymeleaf.org">
+    <div class= "row   col-md-2">
+        <div class="panel-group">
+            <div class="panel panel-success">
+
+                <div class="panel-heading">
+                    <div class="panel-title text-center">
+                        <a href="adminUserMs">个人信息管理</a>
+                    </div>
+                </div>
+
+                <div class="panel-heading">
+                    <div class="panel-title text-center">
+                        <a href="#sys-set" data-toggle="collapse">用户管理</a><span class="caret"></span>
+                    </div>
+                </div>
+
+                <div class="panel-collapse collapse in" id="sys-set">
+                    <div class="panel-body">
+                        <ul class="list-unstyled text-center">
+                            <li><a href="#">新增用户</a></li>
+                            <li><a href="userManage">用户信息管理</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel-heading">
+                    <div class="panel-title text-center">
+                        <a href="#pep-set" data-toggle="collapse">教学管理</a><span class="caret"></span>
+                    </div>
+                </div>
+
+                <div class="panel-collapse collapse in " id="pep-set">
+                    <div class="panel-body">
+                        <ul class="list-unstyled text-center">
+                            <li><a href="#">新增教学分类</a></li>
+                            <li><a href="#">托管服务</a></li>
+                            <li><a href="#">学科培训</a></li>
+                            <li><a href="#">兴趣素能</a></li>
+                            <li><a href="#">品格培育</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel-heading">
+                    <div class="panel-title text-center">
+                        <a href="#meu-set" data-toggle="collapse">学生管理</a>
+                    </div>
+                </div>
+
+                <!--<div class="panel-collapse collapse in " id="meu-set">-->
+                    <!--<div class="panel-body">-->
+                        <!--<ul class="list-unstyled text-center">-->
+                            <!--<li><a href="#">已报名</a></li>-->
+                            <!--<li><a href="#">管理员账号</a></li>-->
+                            <!--<li><a href="#">管理员密码</a></li>-->
+                        <!--</ul>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+            </div>
+        </div>
+    </div>
+</div>
