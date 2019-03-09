@@ -14,6 +14,10 @@ public class MyWebMvc implements WebMvcConfigurer {
         registry.addViewController("/").setViewName("admin/login");
         registry.addViewController("/adminHome").setViewName("admin/home");
         registry.addViewController("/adminUserMs").setViewName("admin/user_message");
+        registry.addViewController("/userAdd").setViewName("admin/userAdd");
         registry.addViewController("/userManage").setViewName("admin/userManage");
+        registry.addViewController("/categoryAdd").setViewName("admin/categoryAdd");
+        registry.addViewController("/categoryList").setViewName("admin/categoryList");
+        registry.addViewController("/subClass").setViewName("admin/subClass");
     }
 }

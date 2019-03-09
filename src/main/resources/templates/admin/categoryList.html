@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:include="include/admin/adminHeader::html('用户权限管理')">
+<head th:include="include/admin/adminHeader::html('后台首页')">
 </head>
 <!--<script src="webjars/jquery/2.0.0/jquery.min.js"></script>-->
 <!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
@@ -19,22 +19,20 @@
         <table class="table table-bordered table-responsive ">
             <thead>
             <tr>
-                <th>账号</th>
-                <th>密码</th>
-                <th>昵称</th>
-                <th>手机号</th>
-                <th>角色</th>
+                <th>ID</th>
+                <th>分类名称</th>
+                <th>分类描述</th>
+                <th>开设课程</th>
                 <th>删除</th>
-                <th>修改</th>
+                <th>编辑</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="bean in beans">
-                <td>{{bean.email}}</td>
-                <td>{{bean.password}}</td>
+                <td>{{bean.id}}</td>
                 <td>{{bean.name}}</td>
-                <td>{{bean.phone}}</td>
-                <td>{{bean.role}}</td>
+                <td>{{bean.description}}</td>
+                <td><a :href="'subClass?cid='+bean.id"><span class="glyphicon glyphicon-list"></span></a></td>
                 <td><a href="#" @click="deleteBean(bean.id)"><span class="glyphicon glyphicon-trash"></span></a></td>
                 <td><a href="#" @click="getBean(bean.id)" data-toggle="modal" data-target="#myModal"><span
                         class="glyphicon glyphicon-edit"></span></a></td>
@@ -43,55 +41,32 @@
         </table>
         <div th:replace="include/admin/adminPage::html"></div>
     </div>
-
     <div th:replace="include/admin/adminFoot::html"></div>
 
+
+<!--模态框-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">修改用户信息</h4>
+                    <h4 class="modal-title" id="myModalLabel">修改分类信息</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-                            <div class="col-sm-10">
-                                <input type="email" name="email" v-model="bean.email" class="form-control"
-                                       id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputPassword" class="col-sm-2 control-label">Password</label>
-                            <div class="col-sm-10">
-                                <input type="text" name="password" v-model="bean.password" class="form-control"
-                                       id="inputPassword" placeholder="Password">
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label for="inputName" class="col-sm-2 control-label">Name</label>
                             <div class="col-sm-10">
-                                <input type="text" name="name" v-model="bean.name" class="form-control" id="inputName"
-                                       placeholder="Name">
+                                <input type="text" name="name" v-model="bean.name" class="form-control"
+                                       id="inputName" placeholder="Name">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputPhone" class="col-sm-2 control-label">Phone</label>
+                            <label for="inputDescription" class="col-sm-2 control-label">Description</label>
                             <div class="col-sm-10">
-                                <input type="text" name="phone" v-model="bean.phone" class="form-control"
-                                       id="inputPhone" placeholder="Phone">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputRole" class="col-sm-2 control-label">Role</label>
-                            <div class="col-sm-10">
-
-                                <select v-model="bean.role" id="inputRole" name="role" class="form-control">
-                                    <option>管理员</option>
-                                    <option>家长（普通用户）</option>
-                                </select>
+                                <input type="text" name="description" v-model="bean.description" class="form-control"
+                                       id="inputDescription" placeholder="Description">
                             </div>
                         </div>
                     </form>
@@ -104,17 +79,15 @@
         </div>
     </div>
 </div>
-
-
 </body>
 
 <script>
     $(function () {
         var data4Vue = {
-            uri: "user",
+            uri: "category",
             pagination: {},
             beans: [],
-            bean: {id: 0, email: "", password: "", portrait: "", name: "", phone: "", role: ""}
+            bean: {id: 0, name: "",description:""}
         };
 
         var vue = new Vue({
@@ -131,23 +104,6 @@
                         vue.pagination = response.data.data;
                     })
                 },
-                update: function () {
-                    var formData=new FormData();
-                    formData.append("id",this.bean.id);
-                    formData.append("email",this.bean.email);
-                    formData.append("password",this.bean.password);
-                    formData.append("portrait",this.bean.portrait);
-                    formData.append("name",this.bean.name);
-                    formData.append("phone",this.bean.phone);
-                    formData.append("role",this.bean.role);
-                    axios.put(this.uri,formData).then(function (response) {
-                        if (response.data.code == 0) {
-                            alert("更新成功");
-                            vue.list(0);
-                        } else
-                            alert("更新失败");
-                    })
-                },
                 getBean: function (id) {
                     var url = this.uri + "/" + id;
                     axios.get(url).then(function (response) {
@@ -155,16 +111,25 @@
                     })
                 },
                 deleteBean: function (id) {
-                    if (!checkDeleteLink())
+                    if(!checkDeleteLink())
                         return;
                     var url = this.uri + "/" + id;
                     axios.delete(url).then(function (response) {
                         if (response.data.code == 0) {
-                            alert("删除成功");
                             vue.list(0);
                         }
                         else
-                            alert("删除成功");
+                            alert(response.data.message);
+                    })
+                },
+                update:function () {
+                    axios.put(this.uri,this.bean).then(function (response) {
+                        if (response.data.code == 0) {
+                            alert("修改成功");
+                            vue.list(0);
+                        }
+                        else
+                            alert("修改失败")
                     })
                 },
                 jump: function (page) {
@@ -172,9 +137,9 @@
                 },
                 jumpByNumber: function (start) {
                     jumpByNumber(start, vue);
-                },
+                }
             }
         })
-    });
+    })
 </script>
 </html>

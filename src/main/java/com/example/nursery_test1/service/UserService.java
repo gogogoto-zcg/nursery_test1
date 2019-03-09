@@ -43,6 +43,9 @@ public class UserService {
                 return false;
         }
         userDAO.save(bean);
+        User user_session=(User) session.getAttribute("user");
+        /*如果更新的信息为当前用户，则更新session的用户信息*/
+        if(bean.getId()==user_session.getId())
         session.setAttribute("user",bean);
         return true;
     }

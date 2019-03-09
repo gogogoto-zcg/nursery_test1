@@ -29,13 +29,65 @@ public class UserContoller {
      */
     @GetMapping("user")
     public Object list(@RequestParam(value = "start", defaultValue = "0") int start,
-                                     @RequestParam(value = "size", defaultValue = "5") int size
+                       @RequestParam(value = "size", defaultValue = "5") int size
     ) {
         start = start < 0 ? 0 : start;
         Page4Navigator<User> page = userService.list(start, size, 5);  //5表示导航分页最多有5个，像 [1,2,3,4,5] 这样
         return Result.success(page);
     }
 
+
+    /**
+     * 更新用户信息
+     *
+     * @param bean 待更新用户信息
+     * @param img  头像图片
+     * @return
+     * @throws FileNotFoundException
+     */
+    @PutMapping("user")
+    public Object update(User bean, MultipartFile[] img, HttpSession session) throws FileNotFoundException {
+        Boolean b = userService.update(bean, img, session);
+        if (!b) return Result.fail("更新失败");
+        return Result.success();
+    }
+
+    /**
+     * 增加一个用户
+     *
+     * @param bean
+     * @return
+     */
+    @PostMapping("user")
+    public Object userAdd(@RequestBody User bean) {
+        userService.add(bean);
+        return Result.success();
+    }
+
+    /**
+     * 跟据id删除用户
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping("user/{id}")
+    public Object deleteById(@PathVariable("id") int id) {
+        userService.delete(id);
+        return Result.success();
+    }
+
+
+    /**
+     * 跟据id查询一个用户
+     *
+     * @param id 用户id
+     * @return
+     */
+    @GetMapping("user/{id}")
+    public Object getById(@PathVariable("id") int id) {
+        User bean = userService.get(id);
+        return Result.success(bean);
+    }
 
     /**
      * 登陆
@@ -68,28 +120,5 @@ public class UserContoller {
         }
     }
 
-    /**
-     * 跟据id查询一个用户
-     * @param id 用户id
-     * @return
-     */
-    @GetMapping("user/{id}")
-    public Object getUserById(@PathVariable("id") int id) {
-        User bean = userService.get(id);
-        return Result.success(bean);
-    }
 
-    /**
-     * 更新用户信息
-     * @param bean  待更新用户信息
-     * @param img   头像图片
-     * @return
-     * @throws FileNotFoundException
-     */
-    @PutMapping("user")
-    public Object update(User bean, MultipartFile[] img, HttpSession session) throws FileNotFoundException {
-        Boolean b=userService.update(bean,img,session);
-        if(!b)return Result.fail("更新失败");
-        return Result.success();
-    }
 }

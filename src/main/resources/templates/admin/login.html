@@ -41,7 +41,7 @@
                     var url=this.uri;
                     axios.post(url,this.bean).then(function (response) {
                         if(response.data.code==0){
-                            alert("登陆成功");
+//                            alert("登陆成功");
                             location.href="adminHome";
                         }else
                             alert("登陆失败");

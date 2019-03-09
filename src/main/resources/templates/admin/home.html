@@ -8,36 +8,38 @@
 
 
 <body>
-    <div id="workingArea" class="container-fluid">
-        <!--导航栏-->
-        <div th:replace="include/admin/adminNavigator::html"></div>
+<div id="workingArea" class="container-fluid">
+    <!--导航栏-->
+    <div th:replace="include/admin/adminNavigator::html"></div>
 
-        <!--左侧折叠菜单-->
-        <div th:include="include/admin/adminLeftMenu::html"></div>
+    <!--左侧折叠菜单-->
+    <div th:include="include/admin/adminLeftMenu::html"></div>
 
-        <div class="col-md-10">
-            <h1 align="center"> Welcome to admin manage</h1>
-        </div>
-
-        <div th:replace="include/admin/adminFoot::html"></div>
+    <div class="col-md-10">
+        <h1 align="center"> Welcome to admin manage</h1>
     </div>
+
+    <div th:replace="include/admin/adminFoot::html"></div>
+</div>
 </body>
 
 <script>
-    var data4Vue={
-        uri:"",
-        bean:""
-    };
+    $(function () {
 
-    var vue=new Vue({
-        el:"#workingArea",
-        data:data4Vue,
-        mounted:function () {
 
-        },
-        methods:{
+        var data4Vue = {
+            uri: "",
+            bean: ""
+        };
 
-        }
+        var vue = new Vue({
+            el: "#workingArea",
+            data: data4Vue,
+            mounted: function () {
+
+            },
+            methods: {}
+        })
     })
 </script>
 </html>
