@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.openmbean.OpenMBeanConstructorInfo;
+import java.util.List;
 
 @RestController
 public class SubclassController {
@@ -43,6 +44,16 @@ public class SubclassController {
     }
 
     /**
+     * 查询所有子分类，也就是班级类型
+     * @return
+     */
+    @GetMapping("subclass")
+    public Object list() {
+        List<Subclass> subclasses = subclassService.list();
+        return Result.success(subclasses);
+    }
+
+    /**
      * 删除一个子分类
      *
      * @param id
@@ -56,6 +67,7 @@ public class SubclassController {
 
     /**
      * 查询一个子分类
+     *
      * @param id
      * @return
      */
@@ -67,6 +79,7 @@ public class SubclassController {
 
     /**
      * 更新一个子分类
+     *
      * @param bean
      * @return
      */

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/admin/adminHeader::html('个人信息管理')">
+</head>
+<!--<script src="webjars/jquery/2.0.0/jquery.min.js"></script>-->
+<!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
+<!--<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>-->
+
+
+<body>
+<div id="workingArea" class="container-fluid">
+    <!--导航栏-->
+    <div th:replace="include/fore/foreNavigator::html"></div>
+
+    <!--左侧折叠菜单-->
+    <div th:include="include/fore/foreLeftMenu::html"></div>
+
+    <div class="col-md-9 ">
+        <div class="col-md-12 column">
+            <div class="row clearfix">
+                <form class="form-horizontal" role="form">
+                    <div class="col-md-4">
+                        <!--用户自己上传的头像-->
+                        <span th:if="null!=${session.user.portrait}"><img height="140px"
+                                                                          width="140px"
+                                                                          th:src="'img/user/'+${session.user.portrait}"
+                                                                          class="img-circle"></span>
+                        <!--当用户没有自己设置头像时使用默认-->
+                        <span th:unless="null!=${session.user.portrait}"><img height="140px"
+                                                                              width="140px"
+                                                                              th:src="'img/default/default4.jpg'"
+                                                                              class="img-circle"></span>
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">上传头像：</label>
+                            <div class="col-sm-6">
+                                <input id="image" type="file" @change="getImage($event)">
+                            </div>
+                        </div>
+                    </div>
+                    <!--右侧表单元素占八格-->
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">邮箱：</label>
+                            <div class="col-sm-6">
+                                <input name="email" disabled="disabled" class="form-control"
+                                       v-model="bean.email"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">密码：</label>
+                            <div class="col-sm-6">
+                                <input name="password" class="form-control" v-model="bean.password"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">手机号：</label>
+                            <div class="col-sm-6">
+                                <input name="phone" class="form-control" v-model="bean.phone" placeholder="选填"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">姓名：</label>
+                            <div class="col-sm-6">
+                                <input name="name" class="form-control" v-model="bean.name"
+                                       placeholder="选填"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">角色：</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" disabled="disabled" v-model="bean.role"/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <button class="btn btn-primary" @click="update">提交修改</button>
+    </div>
+    <div th:replace="include/admin/adminFoot::html"></div>
+</div>
+</body>
+
+
+<script>
+    $(function () {
+        var data4Vue = {
+            uri: "user",
+            bean: {id: 0, email: "", password: "", portrait: "", name: "", phone: "", role: ""},
+            img_portrait:""
+        };
+
+        var vue = new Vue({
+            el: "#workingArea",
+            data: data4Vue,
+            mounted: function () {
+                this.getUser();
+            },
+            methods: {
+                /*获取session中用户id，然后查询出用户数据*/
+                getUser: function () {
+                    this.bean.id = [[${session.user.id}]];
+                    var url = this.uri + "/" + this.bean.id;
+                    axios.get(url).then(function (response) {
+                        vue.bean = response.data.data;
+                    })
+                },
+                getImage: function (event) {
+                    this.img_portrait = event.target.files[0];
+                    console.log(this.img_portrait)
+                },
+                update:function () {
+                    var formData=new FormData();
+                    formData.append("id",this.bean.id);
+                    formData.append("email",this.bean.email);
+                    formData.append("password",this.bean.password);
+                    formData.append("portrait",this.bean.portrait);
+                    formData.append("name",this.bean.name);
+                    formData.append("phone",this.bean.phone);
+                    formData.append("role",this.bean.role);
+                    formData.append("img",this.img_portrait);
+                    axios.put(this.uri,formData).then(function (response) {
+                        if(response.data.code==0){
+                            alert("修改成功");
+
+                            location.reload();
+                        }
+                        else alert("更新失败");
+                    })
+
+                }
+            }
+        })
+    })
+</script>
+
+</html>

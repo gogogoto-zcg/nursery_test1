@@ -73,7 +73,7 @@ public class UserService {
 
     /*判断是否能够登陆*/
     public boolean judgeIsLogin(User bean, HttpSession session) {
-        User user = userDAO.findByEmailAndPassword(bean.getEmail(), bean.getPassword());
+        User user = userDAO.findByEmailAndPasswordAndRole(bean.getEmail(), bean.getPassword(),bean.getRole());
         if (user != null) {
             session.setAttribute("user", user);
             return true;

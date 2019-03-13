@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:include="include/admin/adminHeader::html('登陆')">
+<head th:include="include/fore/foreHeader::html('注册')">
 </head>
 <!--<script src="webjars/jquery/2.0.0/jquery.min.js"></script>-->
 <!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
@@ -8,20 +8,15 @@
 
 <body>
 <div class="container" id="workingArea">
-    <h1 align="center">后台登陆</h1>
+    <h1 align="center">Welcome to Nursery Login Page</h1>
     <form class="form-signin col-md-offset-4 col-md-4">
-        <h2 class="form-signin-heading" >Please sign in</h2>
+        <h2 class="form-signin-heading" >Sign up</h2>
         <label for="inputEmail" class="sr-only">Email address</label>
         <input v-model="bean.email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input v-model="bean.password" type="password" id="inputPassword" class="form-control" placeholder="Password" required >
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" value="remember-me"> Remember me
-            </label>
-        </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" @click="login">Sign in</button>
-        <!--<button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>-->
+        <button class="btn btn-lg btn-primary btn-block" type="submit" @click="register">Sign up</button>
+        <button class="btn btn-lg btn-primary btn-block" @click="toSignIn">Return</button>
     </form>
 
 </div>
@@ -31,22 +26,24 @@
 <script>
     $(function () {
         var data4Vue={
-            uri:"login",
-            bean:{email:"",password:"",role:"管理员"}
+            uri:"register_1",
+            bean:{email:"",password:"",role:"家长"}
         };
         var vue=new Vue({
             el: '#workingArea',
             data: data4Vue,
             methods:{
-                login:function () {
+                register:function () {
                     var url=this.uri;
                     axios.post(url,this.bean).then(function (response) {
                         if(response.data.code==0){
-//                            alert("登陆成功");
-                            location.href="adminHome";
+                            alert("注册成功");
                         }else
-                            alert("登陆失败");
+                            alert("注册失败");
                     })
+                },
+                toSignIn:function () {
+                    location.href="foreLogin";
                 }
             }
         })

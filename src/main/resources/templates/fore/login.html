@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:include="include/admin/adminHeader::html('登陆')">
+<head th:include="include/fore/foreHeader::html('登陆')">
 </head>
 <!--<script src="webjars/jquery/2.0.0/jquery.min.js"></script>-->
 <!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
@@ -8,7 +8,7 @@
 
 <body>
 <div class="container" id="workingArea">
-    <h1 align="center">后台登陆</h1>
+    <h1 align="center">Welcome to Nursery Login Page</h1>
     <form class="form-signin col-md-offset-4 col-md-4">
         <h2 class="form-signin-heading" >Please sign in</h2>
         <label for="inputEmail" class="sr-only">Email address</label>
@@ -21,6 +21,7 @@
             </label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit" @click="login">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" @click="toSignUp">Sign up</button>
         <!--<button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>-->
     </form>
 
@@ -32,7 +33,7 @@
     $(function () {
         var data4Vue={
             uri:"login",
-            bean:{email:"",password:"",role:"管理员"}
+            bean:{email:"",password:"",role:"家长"}
         };
         var vue=new Vue({
             el: '#workingArea',
@@ -43,10 +44,13 @@
                     axios.post(url,this.bean).then(function (response) {
                         if(response.data.code==0){
 //                            alert("登陆成功");
-                            location.href="adminHome";
+                            location.href="foreHome";
                         }else
                             alert("登陆失败");
                     })
+                },
+                toSignUp:function () {
+                    location.href="foreRegister";
                 }
             }
         })

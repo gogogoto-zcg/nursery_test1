@@ -110,8 +110,8 @@ public class UserContoller {
      * @param bean 注册用户
      * @return 反馈信息
      */
-    @PostMapping("register")
-    public Object register(User bean) {
+    @PostMapping("register_1")
+    public Object register(@RequestBody User bean) {
         Boolean b = userService.isHaved(bean);
         if (b) return Result.fail("用户名已存在");
         else {

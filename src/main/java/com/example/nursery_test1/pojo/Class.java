@@ -5,21 +5,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "subclass")
+@Table(name = "class")
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
-public class Subclass {
+public class Class {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private  int id;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String name;
-
-    private String description;
+    private String address;
 
     @ManyToOne
-    @JoinColumn(name="cid")
-    private Category category;
+    @JoinColumn(name = "tid")
+    private Subclass type;
 
     public int getId() {
         return id;
@@ -37,29 +35,29 @@ public class Subclass {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getAddress() {
+        return address;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public Category getCategory() {
-        return category;
+    public Subclass getType() {
+        return type;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setType(Subclass type) {
+        this.type = type;
     }
 
     @Override
     public String toString() {
-        return "Subclass{" +
+        return "Class{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", category=" + category +
+                ", address='" + address + '\'' +
+                ", type=" + type +
                 '}';
     }
 }

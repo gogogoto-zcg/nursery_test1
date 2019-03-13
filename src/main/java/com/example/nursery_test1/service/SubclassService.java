@@ -33,10 +33,15 @@ public class SubclassService {
     /*查询某分类下的所有子分类以及分页信息*/
     public Page4Navigator<Subclass> list(int cid, int start, int size,int navigatePages){
         Category category=categoryService.getOne(cid);
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = new PageRequest(start, size, sort);
-        Page<Subclass> pageFromJPA=subclassDao.findByCategory(category,pageable);
+            Sort sort = new Sort(Sort.Direction.DESC, "id");
+            Pageable pageable = new PageRequest(start, size, sort);
+            Page<Subclass> pageFromJPA=subclassDao.findByCategory(category,pageable);
         return new Page4Navigator<>(pageFromJPA,navigatePages);
+    }
+
+    /*查询所有子分类*/
+    public List<Subclass> list(){
+        return subclassDao.findAll();
     }
 
     /*删除某分类的子分类*/
