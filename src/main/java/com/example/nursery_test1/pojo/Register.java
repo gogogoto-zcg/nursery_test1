@@ -1,6 +1,7 @@
 package com.example.nursery_test1.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,7 +26,7 @@ public class Register {
 
     private Date enrolltime;
     private Date paytime;
-    private String ispay;
+    private Boolean ispay;
 
     public int getId() {
         return id;
@@ -75,11 +76,11 @@ public class Register {
         this.paytime = paytime;
     }
 
-    public String getIspay() {
+    public Boolean getIspay() {
         return ispay;
     }
 
-    public void setIspay(String ispay) {
+    public void setIspay(Boolean ispay) {
         this.ispay = ispay;
     }
 
@@ -92,7 +93,7 @@ public class Register {
                 ", type=" + type +
                 ", enrolltime=" + enrolltime +
                 ", paytime=" + paytime +
-                ", ispay='" + ispay + '\'' +
+                ", ispay=" + ispay +
                 '}';
     }
 }

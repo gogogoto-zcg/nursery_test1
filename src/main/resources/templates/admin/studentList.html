@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/admin/adminHeader::html('学生管理')">
+</head>
+<!--<script src="webjars/jquery/2.0.0/jquery.min.js"></script>-->
+<!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
+<!--<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>-->
+
+
+<body>
+<div id="workingArea" class="container-fluid">
+    <!--导航栏-->
+    <div th:replace="include/admin/adminNavigator::html"></div>
+
+    <!--左侧折叠菜单-->
+    <div th:include="include/admin/adminLeftMenu::html"></div>
+
+    <div class="col-md-10">
+        <table class="table table-bordered table-responsive ">
+            <thead>
+            <tr>
+                <th>姓名</th>
+                <th>托管班级</th>
+                <th>家长</th>
+                <th>家长联系方式</th>
+                <th>劝退</th>
+                <!--<th>修改</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="bean in beans">
+                <td>{{bean.name}}</td>
+                <td>{{bean.aClass.name}}</td>
+                <td>{{bean.user.name}}</td>
+                <td>{{bean.user.phone}}</td>
+                <td><a href="#" @click="update(bean.id)"><span class="glyphicon glyphicon-trash"></span></a></td>
+                <!--<td><a href="#" @click="getBean(bean.id)" data-toggle="modal" data-target="#myModal"><span-->
+                        <!--class="glyphicon glyphicon-edit"></span></a></td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="include/admin/adminFoot::html"></div>
+</div>
+</body>
+
+<script>
+    $(function () {
+
+
+        var data4Vue = {
+            uri: "student",
+            pagination:{},
+            beans:[],
+            bean: {id:0,name:"",image:"",age:"",sex:"",school:"",isRegister:1,
+                user:{id:0,name:""},
+                aClass:{id:0,name:""}
+            }
+        };
+
+        var vue = new Vue({
+            el: "#workingArea",
+            data: data4Vue,
+            mounted: function () {
+                this.list(0);
+            },
+            methods: {
+                list:function (start) {
+                    var url=this.uri+"?isRegister=true&start="+start;
+                    axios.get(url).then(function (res) {
+                        console.log(res.data.data.content);
+                        vue.pagination=res.data.data;
+                        vue.beans=res.data.data.content;
+                    })
+                },
+                update:function (id) {
+                    if(!checkDeleteLink())
+                        return;
+                    var url=this.uri+"/"+id+"?state=已劝退";
+                    axios.put(url).then(function (res) {
+                        if(res.data.code==0)
+                            vue.list(0);
+                    })
+                },
+
+            }
+        })
+    })
+</script>
+</html>

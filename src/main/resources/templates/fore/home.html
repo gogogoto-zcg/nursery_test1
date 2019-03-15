@@ -2,9 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:include="include/fore/foreHeader::html('前台首页')">
 </head>
-<!--<script src="webjars/jquery/2.0.0/jquery.min.js"></script>-->
-<!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
-<!--<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>-->
+<script src="webjars/jquery/2.0.0/jquery.min.js"></script>
+<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">
+<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>
 
 
 <body>
@@ -12,6 +12,23 @@
     <!--导航栏-->
     <div th:replace="include/fore/foreNavigator::html"></div>
 
+    <div class="col-md-12 " th:replace="include/fore/foreNav2::html"></div>
+
+    <div>
+        <div style="margin-top: 50px"></div>
+        <h2 class="text-center"><b>放心托育</b></h2>
+        <h2 class="text-center"><b>小学生一站式课后OMO托育提供者</b></h2>
+        <div style="margin-top: 20px"></div>
+        <h4 class="text-center">将孩子的习惯养成、课业学习、兴趣素能培养、品格塑造等贯穿，</h4>
+        <h4 class="text-center"> 以OMO方式打造高品质托育服务</h4>
+        <h4 class="text-center"> 一站式解决孩子课后教育问题。</h4>
+    </div>
+
+    <div class="col-md-12">
+        <div class="col-md-6" v-for="">
+
+        </div>
+    </div>
 
     <div th:replace="include/fore/foreFoot::html"></div>
 </div>

@@ -14,6 +14,12 @@ public class Class {
     private int id;
     private String name;
     private String address;
+    private int studentmax;
+    private int studentnum;
+    private int studentneed;
+
+
+
 
     @ManyToOne
     @JoinColumn(name = "tid")
@@ -51,12 +57,39 @@ public class Class {
         this.type = type;
     }
 
+    public int getStudentmax() {
+        return studentmax;
+    }
+
+    public void setStudentmax(int studentmax) {
+        this.studentmax = studentmax;
+    }
+
+    public int getStudentnum() {
+        return studentnum;
+    }
+
+    public void setStudentnum(int studentnum) {
+        this.studentnum = studentnum;
+    }
+
+    public int getStudentneed() {
+        return studentneed;
+    }
+
+    public void setStudentneed(int studentneed) {
+        this.studentneed = studentneed;
+    }
+
     @Override
     public String toString() {
         return "Class{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
+                ", studentmax=" + studentmax +
+                ", studentnum=" + studentnum +
+                ", studentneed=" + studentneed +
                 ", type=" + type +
                 '}';
     }

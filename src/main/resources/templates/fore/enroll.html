@@ -16,7 +16,7 @@
     <div th:include="include/fore/foreLeftMenu::html"></div>
 
     <div class="col-md-10">
-        <form class="form-horizontal">
+        <form class="form-horizontal col-md-6">
             <div class="form-group">
                 <label class="col-md-4 control-label">学员名称：</label>
                 <div class="col-md-6">
@@ -55,6 +55,20 @@
                 </div>
             </div>
             <div class="form-group">
+                <button class="form-control btn-info " @click="addStudent">确定</button>
+            </div>
+
+        </form>
+        <form class="col-md-6">
+            <div class="form-group">
+                <label class="col-md-4 control-label">选择托管对象：</label>
+                <div class="col-md-6">
+                    <select class="form-control" v-model="bean.student">
+                        <option v-for="student in students" :value="student">{{student.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-md-4 control-label">选择兴趣班：</label>
                 <div class="col-md-6">
                     <select class="form-control" v-model="bean.type">
@@ -79,10 +93,11 @@
         var data4Vue = {
             uri: "register",
             bean: {
-                id: 0, student: {id: 0, name: "", age: "", sex: "", image: "", school: ""}, user: {id: 0},
-                type: {id: 0}
+                id: 0, student: {id: 0, name: "", age: "", sex: "", image: "", school: "",isRegister:false,state:"已报名"}, user: {id: 0},
+                type: {id: 0},ispay:false
             },
             types: [],
+            students: [],
             img: ""
         };
 
@@ -92,6 +107,7 @@
             mounted: function () {
                 this.getUser();
                 this.getType();
+                this.getStudent();
             },
             methods: {
                 getUser: function () {
@@ -109,20 +125,26 @@
                 },
                 getImage: function (event) {
                     this.img = event.target.files[0];
+//                    this.bean.img = event.target.files[0];
+                },
+                getStudent: function () {
+                    var url = "user/" + this.bean.user.id + "/student?isRegister="+this.bean.student.isRegister;
+                    axios.get(url).then(function (response) {
+                        vue.students = response.data.data;
+                    })
                 },
                 add: function () {
-                    vue.addStudent();
-//                    vue.addRegister();
-//                    var formData = new FormData();
-//                    formData.append("name", this.bean.student.name);
-//                    formData.append("age", this.bean.student.age);
-//                    formData.append("sex", this.bean.student.sex);
-//                    formData.append("school", this.bean.student.school);
-//                    formData.append("user", this.bean.user.id);
-//                    formData.append("type", this.bean.type.id);
-//                    formData.append("img", this.img);
-//                    axios.post(this.uri, formData).then(function (response) {
-//                    })
+                    var formData = new FormData();
+                    formData.append("student", this.bean.student.id);
+                    formData.append("user", this.bean.user.id);
+                    formData.append("type", this.bean.type.id);
+                    formData.append("ispay", this.bean.ispay);
+                    axios.post(this.uri, formData).then(function (res) {
+                        if(res.data.code==0)
+                            alert("报名成功");
+                        else
+                            alert(res.data.message);
+                    })
                 },
                 addStudent: function () {
                     var url = "student";
@@ -133,27 +155,17 @@
                     formData.append("school", this.bean.student.school);
                     formData.append("user", this.bean.user.id);
                     formData.append("img", this.img);
-                    alert(1);
-                    axios.post(url, formData).then(function (response) {
-                        alert(1);
-                        vue.bean.student.id = response.data.data.id;
-                        this.addRegister();
+                    formData.append("isRegister", this.bean.isRegister);
+                    formData.append("state", this.bean.student.state);
+
+                    console.log(formData);
+                    axios.post(url, formData).then(function (res) {
+                        console.log(res);
                     })
                 },
-                addRegister: function () {
-                    var formData2 = new FormData();
-                    formData2.append("student", this.bean.student.id);
-//                    formData2.append("user", this.bean.user.id);
-                    formData2.append("type", this.bean.type.id);
-                    console.log(formData2);
-                    alert(2);
-                    axios.post(this.uri, formData2).then(function (response) {
-                        alert(3);
-                    })
-//                }
-                }
             }
         })
     })
 </script>
 </html>
+

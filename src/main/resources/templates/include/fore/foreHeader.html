@@ -48,7 +48,13 @@
                 return true;
             return false;
         }
-
+        //确实是否要付款
+        function checkPay() {
+            var confirmPay = confirm("确认付款");
+            if (confirmPay)
+                return true;
+            return false;
+        }
         //跳转函数
         function jump(page, vue) {
             if ('first' == page && !vue.pagination.first)

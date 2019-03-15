@@ -34,7 +34,10 @@
             <tr v-for="bean in beans">
                 <td>{{bean.id}}</td>
                 <td>{{bean.name}}</td>
-                <td>{{bean.description}}</td>
+                <td>
+                    <p style="width: 200px;white-space: nowrap;text-overflow: ellipsis; overflow: hidden;"
+                       :title="bean.description">{{bean.description}}</p>
+                </td>
                 <td><a href="#" @click="deleteBean(bean.id)"><span class="glyphicon glyphicon-trash"></span></a></td>
                 <td><a href="#" @click="getBean(bean.id)" data-toggle="modal" data-target="#myModal"><span
                         class="glyphicon glyphicon-edit"></span></a></td>
@@ -183,7 +186,13 @@
                         } else
                             alert("修改失败");
                     })
-                }
+                },
+                jump: function (page) {
+                    jump(page, vue); //定义在adminHeader.html 中
+                },
+                jumpByNumber: function (start) {
+                    jumpByNumber(start, vue);
+                },
             }
         })
     })

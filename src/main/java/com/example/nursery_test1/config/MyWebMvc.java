@@ -24,6 +24,7 @@ public class MyWebMvc implements WebMvcConfigurer {
         registry.addViewController("/categoryList").setViewName("admin/categoryList");
         registry.addViewController("/subClass").setViewName("admin/subClass");
         registry.addViewController("/classPage").setViewName("admin/class");
+        registry.addViewController("/studentList").setViewName("admin/studentList");
 
 
         /*前台*/
@@ -33,5 +34,7 @@ public class MyWebMvc implements WebMvcConfigurer {
         registry.addViewController("/foreRegister").setViewName("fore/register");
         registry.addViewController("/UserInfo").setViewName("fore/UserInfo");
         registry.addViewController("/enroll").setViewName("fore/enroll");
+        registry.addViewController("/myRegister").setViewName("fore/myRegister");
+
     }
 }

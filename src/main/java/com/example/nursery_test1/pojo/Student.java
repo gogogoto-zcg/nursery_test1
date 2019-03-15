@@ -18,11 +18,16 @@ public class Student {
     /*存放头像地址*/
     private String image;
     private String school;
+
+    @ManyToOne
+    @JoinColumn(name = "cid")
+    private Class aClass;
     @ManyToOne
     @JoinColumn(name = "uid")
     private User user;
     /*是否已缴费*/
-    private String isRegister;
+    private boolean isRegister;
+    private String state;
 
     public int getId() {
         return id;
@@ -80,12 +85,28 @@ public class Student {
         this.user = user;
     }
 
-    public String getIsRegister() {
+    public boolean isRegister() {
         return isRegister;
     }
 
-    public void setIsRegister(String isRegister) {
-        this.isRegister = isRegister;
+    public void setRegister(boolean register) {
+        isRegister = register;
+    }
+
+    public Class getaClass() {
+        return aClass;
+    }
+
+    public void setaClass(Class aClass) {
+        this.aClass = aClass;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     @Override
@@ -97,8 +118,10 @@ public class Student {
                 ", age='" + age + '\'' +
                 ", image='" + image + '\'' +
                 ", school='" + school + '\'' +
+                ", aClass=" + aClass +
                 ", user=" + user +
-                ", isRegister='" + isRegister + '\'' +
+                ", isRegister=" + isRegister +
+                ", state='" + state + '\'' +
                 '}';
     }
 }

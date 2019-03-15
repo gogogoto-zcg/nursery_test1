@@ -15,6 +15,10 @@
         <input v-model="bean.email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input v-model="bean.password" type="password" id="inputPassword" class="form-control" placeholder="Password" required >
+        <label for="inputName" class="sr-only">Name</label>
+        <input v-model="bean.name" type="text" id="inputName" class="form-control" placeholder="Name" required >
+        <label for="inputPhone" class="sr-only">Phone</label>
+        <input v-model="bean.phone" type="text" id="inputPhone" class="form-control" placeholder="Phone" required >
         <button class="btn btn-lg btn-primary btn-block" type="submit" @click="register">Sign up</button>
         <button class="btn btn-lg btn-primary btn-block" @click="toSignIn">Return</button>
     </form>
@@ -27,7 +31,7 @@
     $(function () {
         var data4Vue={
             uri:"register_1",
-            bean:{email:"",password:"",role:"家长"}
+            bean:{email:"",password:"",name:"",phone:"",role:"家长"}
         };
         var vue=new Vue({
             el: '#workingArea',

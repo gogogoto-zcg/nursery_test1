@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/fore/foreHeader::html('个人中心')">
+</head>
+<!--<script src="webjars/jquery/2.0.0/jquery.min.js"></script>-->
+<!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
+<!--<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>-->
+
+
+<body>
+<div id="workingArea" class="container-fluid">
+    <!--导航栏-->
+    <div th:replace="include/fore/foreNavigator::html"></div>
+
+    <!--左侧折叠菜单-->
+    <div th:include="include/fore/foreLeftMenu::html"></div>
+
+    <div class="col-md-10">
+        <table class="table table-bordered table-responsive ">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>托管对象</th>
+                <th>报名课程</th>
+                <th>报名时间</th>
+                <th>缴费情况</th>
+                <!--<th>付款人</th>-->
+                <th>付款时间</th>
+                <th>就读状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="bean in beans">
+                <td>{{bean.id}}</td>
+                <td>{{bean.student.name}}</td>
+                <td>{{bean.type.name}}</td>
+                <td>{{bean.enrolltime|dateformat}}</td>
+                <td v-if="!bean.ispay">
+                    <button class="btn btn-info btn-sm" @click="pay(bean.id)">去付款</button>
+                </td>
+                <td v-else>已支付</td>
+                <!--<td>{{bean.user.name}}</td>-->
+                <td v-if="!bean.ispay"></td>
+                <td v-else>{{bean.paytime|dateformat}}</td>
+                <td >{{bean.student.state}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="include/fore/foreFoot::html"></div>
+</div>
+</body>
+
+<script>
+    $(function () {
+
+        /*时间格式化*/
+        Vue.filter('dateformat', function (dataStr) {
+            return moment(dataStr).format('YYYY-MM-DD HH:mm:ss')
+        });
+
+        var data4Vue = {
+            uri: "register",
+            pagination: {},
+            beans: [],
+            bean: {
+                id: 0, student: {id: 0,state:""}, user: {id: 0}, type: {id: 0}, enrolltime: "", paytime: "", ispay: 0
+            }
+        };
+
+        var vue = new Vue({
+            el: "#workingArea",
+            data: data4Vue,
+            mounted: function () {
+                this.list(0);
+            },
+            methods: {
+                list: function (start) {
+                    var uid = [[${session.user.id}]];
+                    var url = "user/" + uid + "/" + this.uri + "?start=" + start;
+                    axios.get(url).then(function (res) {
+                        console.log(res.data.data.content);
+                        vue.beans = res.data.data.content;
+                        vue.pagination = res.data.data;
+                    })
+                },
+                pay: function (id) {
+                    if (!checkPay()) return;
+                    var url = this.uri + "/" + id;
+                    axios.put(url).then(function (res) {
+                        if (res.data.code == 0){
+                            alert("付费成功");
+                            vue.list(0);
+                        }
+
+                    })
+                }
+            }
+        })
+    })
+</script>
+</html>
