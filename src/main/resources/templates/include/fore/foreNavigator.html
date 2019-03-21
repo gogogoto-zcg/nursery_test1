@@ -7,18 +7,21 @@
             <a class="navbar-brand" href="foreHome">心悦社会托管机构</a>
         </div>
         <div class="navbar-right">
-            <a href="zone" class="navbar-brand">
+            <div th:if="null!=${session.user}">
+                <a href="zone" class="navbar-brand">
                 <span th:if="null!=${session.user.portrait}"><img height="25px"
                                                                   width="25px"
                                                                   th:src="'img/user/'+${session.user.portrait}"
                                                                   class="img-circle"></span>
-                <!--当用户没有自己设置头像时使用默认-->
-                <span th:unless="null!=${session.user.portrait}"><img height="25px"
-                                                                      width="25px"
-                                                                      th:src="'img/default/default4.jpg'"
-                                                                      class="img-circle"></span>
+                    <!--当用户没有自己设置头像时使用默认-->
+                    <span th:unless="null!=${session.user.portrait}"><img height="25px"
+                                                                          width="25px"
+                                                                          th:src="'img/default/default4.jpg'"
+                                                                          class="img-circle"></span>
                 </a>
-            <a href="foreLogout" class="navbar-brand"><span class="glyphicon glyphicon-log-in"></span></a>
+                <a href="foreLogout" class="navbar-brand"><span class="glyphicon glyphicon-log-in"></span></a>
+            </div>
+            <div th:unless="null!=${session.user}"><a href="foreLogin" class="navbar-brand">请登录</a></div>
         </div>
     </nav>
 </div>

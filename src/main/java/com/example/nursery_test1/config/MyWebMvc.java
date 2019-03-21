@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class MyWebMvc implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("redirect:foreLogin");
+        registry.addViewController("/").setViewName("redirect:foreHome");
 
 
         /*后台*/
@@ -25,6 +25,11 @@ public class MyWebMvc implements WebMvcConfigurer {
         registry.addViewController("/subClass").setViewName("admin/subClass");
         registry.addViewController("/classPage").setViewName("admin/class");
         registry.addViewController("/studentList").setViewName("admin/studentList");
+        registry.addViewController("/classStudent").setViewName("admin/classStudent");
+        registry.addViewController("/addPropaganda").setViewName("admin/addPropaganda");
+        registry.addViewController("/activityList").setViewName("admin/activityList");
+        registry.addViewController("/resourceImg").setViewName("admin/resourceImg");
+        registry.addViewController("/resourceVideo").setViewName("admin/resourceVideo");
 
 
         /*前台*/
@@ -35,6 +40,8 @@ public class MyWebMvc implements WebMvcConfigurer {
         registry.addViewController("/UserInfo").setViewName("fore/UserInfo");
         registry.addViewController("/enroll").setViewName("fore/enroll");
         registry.addViewController("/myRegister").setViewName("fore/myRegister");
+        registry.addViewController("/categoryPage").setViewName("fore/categoryPage");
+        registry.addViewController("/subClassPage").setViewName("fore/subClassPage");
 
     }
 }

@@ -1,6 +1,7 @@
 package com.example.nursery_test1.service;
 
 import com.example.nursery_test1.dao.StudentDao;
+import com.example.nursery_test1.pojo.Class;
 import com.example.nursery_test1.pojo.Student;
 import com.example.nursery_test1.pojo.User;
 import com.example.nursery_test1.util.FileUtils;
@@ -24,6 +25,9 @@ public class StudentService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ClassService classService;
 
     /*新增一个学生*/
     public Student add(Student bean, MultipartFile[] img) {
@@ -85,4 +89,13 @@ public class StudentService {
         studentDao.save(s);
     }
 
+
+    /*查找某班的所有学生并分页*/
+    public Page4Navigator<Student> listByRegisterAndClass(int start, int size, int navigatePages,Boolean b,int cid){
+        Class c=classService.getOne(cid);
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(start, size, sort);
+        Page<Student> pageFromJPA = studentDao.findByIsRegisterAndAClass(b,c,pageable);
+        return new Page4Navigator<>(pageFromJPA, navigatePages);
+    }
 }

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/admin/adminHeader::html('后台首页')">
+</head>
+<script src="webjars/jquery/2.0.0/jquery.min.js"></script>
+<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">
+<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="fileinput.min.css">
+<script src="fileinput.min.js"></script>
+
+
+<body>
+<div id="workingArea" class="container-fluid">
+    <!--导航栏-->
+    <div th:replace="include/admin/adminNavigator::html"></div>
+
+    <!--左侧折叠菜单-->
+    <div th:include="include/admin/adminLeftMenu::html"></div>
+
+    <div class="col-md-10">
+        <div class="col-md-12 container " style="height: 300px">
+            <table class="table table-bordered table-responsive ">
+                <thead>
+                <tr>
+                    <th>活动备注</th>
+                    <th>上传时间</th>
+                    <th>上传用户</th>
+                    <th>图片管理</th>
+                    <th>视频管理</th>
+                    <th>删除</th>
+                    <th>编辑</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="bean in beans">
+                    <td>{{bean.introduce}}</td>
+                    <td>{{bean.uploadTime|dateformat}}</td>
+                    <td>{{bean.user.name}}</td>
+                    <td><a :href="'resourceImg?aid='+bean.id"><span class="glyphicon glyphicon-list"></span></a></td>
+                    <td><a :href="'resourceVideo?aid='+bean.id"><span class="glyphicon glyphicon-list"></span></a></td>
+                    <td><a href="#" @click="deleteBean(bean.id)"><span class="glyphicon glyphicon-trash"></span></a></td>
+                    <td><a href="#" @click="getBean(bean.id)" data-toggle="modal" data-target="#myModal"><span
+                            class="glyphicon glyphicon-edit"></span></a></td>
+                </tr>
+                </tbody>
+            </table>
+            <div th:replace="include/admin/adminPage::html"></div>
+
+        </div>
+        <br>
+        <br>
+
+        <hr >
+
+
+        <!--图片上传-->
+        <div class="container">
+            <form id="form" enctype="multipart/form-data">
+                <div class="row form-group">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="col-md-2"><h4>活动备注</h4></div>
+                        <div class="col-md-10"><input class="form-control" v-model="introduce"></div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading" align="center">
+                            <label style="text-align: center;font-size: 18px;">文 件 上 传</label>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <input @change="getFile($event)" id="input-id" multiple type="file"
+                                       data-show-caption="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group" align="center">
+                    <button class="btn btn-lg btn-primary" @click="add">确认上传</button>
+                </div>
+            </form>
+        </div>
+        <div style="height: 100px;"></div>
+    </div>
+
+
+    <div th:replace="include/admin/adminFoot::html"></div>
+
+    <!--模态框-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">修改分类信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="inputName" class="col-sm-2 control-label">Introduce</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="name" v-model="bean.introduce" class="form-control"
+                                       id="inputName" placeholder="Name">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" @click="update" data-dismiss="modal">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    $(function () {
+        /*时间格式化*/
+        Vue.filter('dateformat', function (dataStr) {
+            return moment(dataStr).format('YYYY-MM-DD HH:mm:ss')
+        });
+
+        var cid = getUrlParms("cid");
+
+        var data4Vue = {
+            uri: "activity",
+            introduce: "",
+            files: "",
+            pagination: {},
+            beans: [],
+            bean:{id:0,introduce:"",uploadTime:"",user:{id:0,name:""}}
+        };
+
+        var vue = new Vue({
+            el: "#workingArea",
+            data: data4Vue,
+            mounted: function () {
+                this.listActivity(0);
+            },
+            methods: {
+                getFile: function (event) {
+                    this.files = event.target.files;
+                    console.log(this.files);
+                },
+                add: function () {
+                    console.log(this.files);
+                    var files = this.files;
+                    var formData = new FormData();
+                    formData.append("introduce", this.introduce);
+                    for (var i = 0; i < files.length; i++) {
+                        formData.append("uploadFiles", files[i]);
+                    }
+                    var uid = [[${session.user.id}]];
+                    var url = "aClass/" + cid + "/" + this.uri + "?uid=" + uid;
+                    alert(url);
+                    axios.post(url, formData).then(function (res) {
+                        if (res.data.code == 0) vue.listActivity(0);
+                    })
+                },
+                listActivity: function (start) {
+                    var url = "aClass/" + cid + "/activity";
+                    axios.get(url).then(function (res) {
+                        vue.beans = res.data.data.content;
+                        vue.pagination = res.data.data;
+                    })
+                },
+                getBean:function (id) {
+                    var url=this.uri+"/"+id;
+                    axios.get(url).then(function (res) {
+                        vue.bean=res.data.data;
+                    })
+                },
+                deleteBean:function (id) {
+                    if(!checkDeleteLink())
+                        return;
+                    var url=this.uri+"/"+id;
+                    alert(url);
+                    axios.delete(url).then(function (res) {
+                        if(res.data.code==0)
+                        vue.listActivity(0);
+                    })
+                },
+                update:function () {
+                    axios.put(this.uri,this.bean).then(function (res) {
+                        if(res.data.code==0)
+                        {
+                            alert("修改成功");
+                            vue.listActivity(0);
+                        }
+
+                    })
+                },
+                jump: function (page) {
+                    jump(page, vue); //定义在adminHeader.html 中
+                },
+                jumpByNumber: function (start) {
+                    jumpByNumber(start, vue);
+                }
+            }
+        })
+    })
+</script>
+<!--多文件上传js-->
+<script>
+    $(function () {
+        initFileInput("input-id");
+    });
+
+    function initFileInput(ctrlName) {
+        var control = $('#' + ctrlName);
+        control.fileinput({
+            language: 'zh', //设置语言
+            uploadUrl: "", //上传的地址
+            allowedFileExtensions: ['jpg', 'gif', 'png', 'doc', 'docx', 'pdf', 'ppt', 'pptx', 'txt', 'mp4'],//接收的文件后缀
+            maxFilesNum: 5,//上传最大的文件数量
+            //uploadExtraData:{"id": 1, "fileName":'123.mp3'},
+            uploadAsync: true, //默认异步上传
+            showUpload: false, //是否显示上传按钮
+            showRemove: true, //显示移除按钮
+            showPreview: true, //是否显示预览
+            showCaption: true,//是否显示标题
+            browseClass: "btn btn-primary", //按钮样式
+            dropZoneEnabled: true,//是否显示拖拽区域
+            //minImageWidth: 50, //图片的最小宽度
+            //minImageHeight: 50,//图片的最小高度
+            //maxImageWidth: 1000,//图片的最大宽度
+            //maxImageHeight: 1000,//图片的最大高度
+            maxFileSize: 0,//单位为kb，如果为0表示不限制文件大小
+            //minFileCount: 0,
+            //maxFileCount: 10, //表示允许同时上传的最大文件个数
+            enctype: 'multipart/form-data',
+            validateInitialCount: true,
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+
+        }).on('filepreupload', function (event, data, previewId, index) {     //上传中
+            var form = data.form, files = data.files, extra = data.extra,
+                response = data.response, reader = data.reader;
+            console.log('文件正在上传');
+        }).on("fileuploaded", function (event, data, previewId, index) {    //一个文件上传成功
+            console.log('文件上传成功！' + data.id);
+
+        }).on('fileerror', function (event, data, msg) {  //一个文件上传失败
+            console.log('文件上传失败！' + data.id);
+        })
+    }
+</script>
+</html>

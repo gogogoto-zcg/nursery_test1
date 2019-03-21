@@ -88,4 +88,7 @@ public class SubclassController {
         subclassService.update(bean);
         return Result.success();
     }
+
+
+
 }

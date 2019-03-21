@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/admin/adminHeader::html('后台首页')">
+</head>
+<script src="webjars/jquery/2.0.0/jquery.min.js"></script>
+<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">
+<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+
+
+<body>
+<div id="workingArea" class="container-fluid">
+    <!--导航栏-->
+    <div th:replace="include/admin/adminNavigator::html"></div>
+
+    <!--左侧折叠菜单-->
+    <div th:include="include/admin/adminLeftMenu::html"></div>
+
+    <div class="col-md-10 ">
+        <div class="col-md-6">
+            <h4 class="text-info">图片管理:</h4>
+            <table class="table table-bordered table-responsive ">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>图片</th>
+                    <th>删除</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="bean in beans">
+                    <td>{{bean.id}}</td>
+                    <td><img height="20px" width="20px" class="img-rounded" :src="bean.file_url"></td>
+                    <td><a href="#" @click="deleteBean(bean.id)"><span class="glyphicon glyphicon-trash"></span></a></td>
+                </tr>
+                </tbody>
+            </table>
+            <div th:replace="include/admin/adminPage::html"></div>
+        </div>
+    </div>
+
+    <div th:replace="include/admin/adminFoot::html"></div>
+</div>
+</body>
+
+<script>
+    $(function () {
+        var aid = getUrlParms("aid");
+
+        var data4Vue = {
+            uri: "resource",
+            pagination:{},
+            beans: [],
+            bean: ""
+        };
+
+        var vue = new Vue({
+            el: "#workingArea",
+            data: data4Vue,
+            mounted: function () {
+                this.list(0);
+            },
+            methods: {
+                list: function (start) {
+                    var url = "activity/" + aid + "/" + this.uri + "?start=" + start + "&fileType=jpg";
+                    axios.get(url).then(function (res) {
+                        vue.beans = res.data.data.content;
+                        vue.pagination = res.data.data;
+                        console.log(vue.beans);
+                    })
+                },
+                deleteBean:function (id) {
+                    if(!checkDeleteLink())
+                        return;
+                    var url=this.uri+"/"+id;
+                    axios.delete(url).then(function (res) {
+                        vue.list(0);
+                    })
+                },
+                jump: function (page) {
+                    jump(page, vue); //定义在adminHeader.html 中
+                },
+                jumpByNumber: function (start) {
+                    jumpByNumber(start, vue);
+                }
+            }
+        })
+    })
+</script>
+</html>

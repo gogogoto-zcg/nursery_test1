@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/admin/adminHeader::html('后台首页')">
+</head>
+<!--<script src="webjars/jquery/2.0.0/jquery.min.js"></script>-->
+<!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
+<!--<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>-->
+
+
+<body>
+<div id="workingArea" class="container-fluid">
+    <!--导航栏-->
+    <div th:replace="include/admin/adminNavigator::html"></div>
+
+    <!--左侧折叠菜单-->
+    <div th:include="include/admin/adminLeftMenu::html"></div>
+
+    <div class="col-md-10">
+        <form class="form-inline">
+            <div class="form-group">
+                <label class="">选择宣传视频:</label>
+            </div>
+                <div class="form-group">
+                <input type="file"  @change="getVideo($event)" id="InputPropaganda" >
+            </div>
+            <button type="submit" class="btn btn-default" @click="add">确认上传</button>
+        </form>
+    </div>
+
+    <div th:replace="include/admin/adminFoot::html"></div>
+</div>
+</body>
+
+<script>
+    $(function () {
+
+
+        var data4Vue = {
+            uri: "propaganda",
+            bean: "",
+            video:""
+        };
+
+        var vue = new Vue({
+            el: "#workingArea",
+            data: data4Vue,
+            mounted: function () {
+
+            },
+            methods: {
+                add:function () {
+                    var formData=new FormData();
+                    formData.append("file",this.video);
+                    axios.post(this.uri,formData).then(function (res) {
+                        if(res.data.code==0) alert("上传成功");
+                    })
+                },
+                getVideo:function (event) {
+                    this.video=event.target.files[0];
+                    console.log(this.video);
+                },
+            }
+        })
+    })
+</script>
+</html>

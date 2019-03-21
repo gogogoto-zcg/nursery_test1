@@ -1,5 +1,6 @@
 package com.example.nursery_test1.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -19,6 +20,9 @@ public class Subclass {
 
     @ManyToOne
     @JoinColumn(name="cid")
+    @JsonBackReference
+    /*不会重复遍历自己*/
+//    @JsonIgnoreProperties(value = { "Subclass" })
     private Category category;
 
     public int getId() {

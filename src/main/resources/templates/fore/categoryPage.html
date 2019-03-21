@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:include="include/fore/foreHeader::html('前台首页')">
+<head th:include="include/fore/foreHeader::html('课程性质分类')">
 </head>
 <!--<script src="webjars/jquery/2.0.0/jquery.min.js"></script>-->
 <!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
 <!--<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>-->
+
 
 <body>
 <div id="workingArea" class="container-fluid">
@@ -22,11 +23,19 @@
         <h4 class="text-center"> 以OMO方式打造高品质托育服务</h4>
         <h4 class="text-center"> 一站式解决孩子课后教育问题。</h4>
     </div>
-    <div align="center">
-        <video height="400px" width="600px" src="video/propaganda/宣传视频.mp4" controls preload="auto">
-        </video>
+
+    <div class="col-md-12">
+        <div class="col-md-6 text-center" v-for="bean in beans" style="height: 300px">
+            <h3>{{bean.name}}</h3>
+            <p>{{bean.description}}</p>
+            <span v-for="subclass in bean.subclassList">
+                {{subclass.name}}
+            </span>
+            <br>
+            <a :href="'subClassPage?cid='+bean.id">了解更多</a>
+        </div>
     </div>
-    <div style="height: 100px"></div>
+
     <div th:replace="include/fore/foreFoot::html"></div>
 </div>
 </body>
@@ -36,7 +45,8 @@
 
 
         var data4Vue = {
-            uri: "",
+            uri: "category",
+            beans:[],
             bean: ""
         };
 
@@ -44,9 +54,16 @@
             el: "#workingArea",
             data: data4Vue,
             mounted: function () {
-
+                this.list();
             },
-            methods: {}
+            methods: {
+                list:function () {
+                    axios.get(this.uri).then(function (res) {
+                        vue.beans=res.data.data.content;
+                        console.log(vue.beans);
+                    })
+                }
+            }
         })
     })
 </script>

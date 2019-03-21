@@ -56,4 +56,17 @@ public class CategoryService {
         Page pageFromJPA = categoryDao.findAll(pageable);
         return new Page4Navigator<>(pageFromJPA, navigatePages);
     }
+
+    /*为一个category设置子分类*/
+    public void setSubclass(Category bean){
+        List<Subclass> byCategory = subclassService.listByCategory(bean);
+        bean.setSubclassList(byCategory);
+    }
+
+    /*为一组category设置子分类*/
+    public void setSubclassList(List<Category> categoryList){
+        for (Category bean:categoryList) {
+            setSubclass(bean);
+        }
+    }
 }

@@ -83,4 +83,13 @@ public class StudentController {
         studentService.updateByState(id,state);
         return Result.success();
     }
+
+    @GetMapping("class/{cid}/student")
+    public Object listByClass(@RequestParam(value = "start", defaultValue = "0") int start,
+                              @RequestParam(value = "size", defaultValue = "5") int size,
+                              @RequestParam(value = "isRegister", defaultValue = "0")boolean b,
+                              @PathVariable("cid")int cid){
+        Page4Navigator<Student> page=studentService.listByRegisterAndClass(start,size,5,b,cid);
+        return  Result.success(page);
+    }
 }

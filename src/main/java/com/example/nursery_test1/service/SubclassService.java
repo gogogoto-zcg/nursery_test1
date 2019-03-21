@@ -59,4 +59,5 @@ public class SubclassService {
         subclassDao.save(bean);
     }
 
+
 }

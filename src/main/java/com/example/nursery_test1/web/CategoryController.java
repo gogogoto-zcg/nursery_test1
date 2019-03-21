@@ -2,6 +2,7 @@ package com.example.nursery_test1.web;
 
 import com.example.nursery_test1.pojo.Category;
 import com.example.nursery_test1.service.CategoryService;
+import com.example.nursery_test1.service.SubclassService;
 import com.example.nursery_test1.util.Page4Navigator;
 import com.example.nursery_test1.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import java.util.List;
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    SubclassService subclassService;
 
     /**
      * 查找一个分类
@@ -76,6 +80,7 @@ public class CategoryController {
     public Object listCategory(@RequestParam(value = "start", defaultValue = "0") int start,
                                @RequestParam(value = "size", defaultValue = "5") int size) {
         Page4Navigator<Category> page = categoryService.list(start, size, 5);
+        categoryService.setSubclassList(page.getContent());
         return Result.success(page);
     }
 

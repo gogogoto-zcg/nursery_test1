@@ -1,5 +1,6 @@
 package com.example.nursery_test1.dao;
 
+import com.example.nursery_test1.pojo.Class;
 import com.example.nursery_test1.pojo.Student;
 import com.example.nursery_test1.pojo.User;
 import org.springframework.data.domain.Page;
@@ -17,4 +18,6 @@ public interface StudentDao extends JpaRepository<Student,Integer> {
 //    Page<Student> findByIsRegister(boolean b, Pageable pageable);
 
     Page<Student> findByIsRegister(boolean b, Pageable pageable);
+
+    Page<Student> findByIsRegisterAndAClass(Boolean b, Class c,Pageable pageable);
 }
