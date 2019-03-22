@@ -70,4 +70,29 @@ public class ClassController {
         classService.update(bean);
         return Result.success();
     }
+
+    /**
+     * 跟据查询类型以及查询关键字查询字符串
+     * @param start
+     * @param size
+     * @param type
+     * @param keyword
+     * @return
+     */
+    @GetMapping("lookup")
+    public Object lookup(@RequestParam(value = "start", defaultValue = "0") int start,
+                         @RequestParam(value = "size", defaultValue = "5") int size,
+                         @RequestParam("type")String type,
+                         @RequestParam("keyword")String keyword){
+        Page4Navigator<Class> page=null;
+        if(type.equals("name")){
+            page=classService.listByNameLike(start,size,5,keyword);
+        }
+        else if(type.equals("type")){
+            page=classService.listByTypeLike(start,size,5,keyword);
+        }else {
+            return null;
+        }
+        return Result.success(page);
+    }
 }

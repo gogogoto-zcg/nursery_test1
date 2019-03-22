@@ -15,6 +15,11 @@
     <div th:include="include/admin/adminLeftMenu::html"></div>
 
     <div class="col-md-10">
+        <ol class="breadcrumb">
+            <li><a href="categoryList">教学分类</a></li>
+            <li class="active">{{category.name}}</li>
+        </ol>
+
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal1">
             新增子分类
@@ -128,7 +133,8 @@
             pagination: {},
             beans: [],
             bean: {id: 0, name: "", description: "", category: {id: 0}},
-            bean_get: {id: 0, name: "", description: "", category: {id: 0}}
+            bean_get: {id: 0, name: "", description: "", category: {id: 0}},
+            category:{id:0}
         };
 
         var vue = new Vue({
@@ -143,6 +149,7 @@
                     var url = "category/" + cid;
                     axios.get(url).then(function (response) {
                         vue.bean.category = response.data.data;
+                        vue.category = response.data.data;
                     })
                 },
                 list: function (start) {

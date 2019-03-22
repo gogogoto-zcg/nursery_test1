@@ -19,7 +19,14 @@
     <div th:include="include/admin/adminLeftMenu::html"></div>
 
     <div class="col-md-10">
-        <div class="col-md-12 container " style="height: 300px">
+        <!--路径导航栏-->
+        <ol class="breadcrumb">
+            <li><a href="classPage">班级管理</a></li>
+            <li class="active">{{aClass.name}}</li>
+        </ol>
+
+
+        <!--<div class="col-md-12 container " style="height: 300px">-->
             <table class="table table-bordered table-responsive ">
                 <thead>
                 <tr>
@@ -47,10 +54,9 @@
             </table>
             <div th:replace="include/admin/adminPage::html"></div>
 
-        </div>
+        <!--</div>-->
         <br>
         <br>
-
         <hr >
 
 
@@ -132,16 +138,24 @@
             files: "",
             pagination: {},
             beans: [],
-            bean:{id:0,introduce:"",uploadTime:"",user:{id:0,name:""}}
+            bean:{id:0,introduce:"",uploadTime:"",user:{id:0,name:""}},
+            aClass:{}
         };
 
         var vue = new Vue({
             el: "#workingArea",
             data: data4Vue,
             mounted: function () {
+                this.getClass();
                 this.listActivity(0);
             },
             methods: {
+                getClass:function () {
+                    var url="class/"+cid;
+                    axios.get(url).then(function (res) {
+                        vue.aClass=res.data.data;
+                    })
+                },
                 getFile: function (event) {
                     this.files = event.target.files;
                     console.log(this.files);

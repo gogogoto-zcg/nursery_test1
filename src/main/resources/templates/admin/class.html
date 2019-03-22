@@ -2,9 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:include="include/admin/adminHeader::html('子分类管理')">
 </head>
-<script src="webjars/jquery/2.0.0/jquery.min.js"></script>
-<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">
-<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+<!--<script src="webjars/jquery/2.0.0/jquery.min.js"></script>-->
+<!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
+<!--<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>-->
 
 
 <body>
@@ -16,10 +16,38 @@
     <div th:include="include/admin/adminLeftMenu::html"></div>
 
     <div class="col-md-10">
+        <ol class="breadcrumb">
+            <li class="active">班级管理</li>
+        </ol>
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal1">
-            新增班级
-        </button>
+
+
+        <form class="form-inline">
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal1">
+                    新增班级
+                </button>
+            </div>
+            <div class="form-group">
+                <label class="col-md-6 control-label">查询类型：</label>
+                <div class="col-md-6">
+                    <select class="form-control" v-model="keyword_type">
+                        <option value="name">班级名称</option>
+                        <option value="type">班级类型</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="keyword" class="control-label col-md-4">关键字：</label>
+                <div class="col-md-8">
+                    <input id="keyword" class="form-control" v-model="keyword">
+                </div>
+            </div>
+            <div class="form-group">
+                <button @click="lookup">确定</button>
+            </div>
+
+        </form>
 
         <table class="table table-bordered table-responsive ">
             <thead>
@@ -27,6 +55,8 @@
                 <th>ID</th>
                 <th>班级名称</th>
                 <th>班级地址</th>
+                <th>班级容量</th>
+                <th>班级人数</th>
                 <th>班级类型</th>
                 <th>活动上传</th>
                 <th>班级学生</th>
@@ -39,6 +69,8 @@
                 <td>{{bean.id}}</td>
                 <td>{{bean.name}}</td>
                 <td>{{bean.address}}</td>
+                <td>{{bean.studentmax}}</td>
+                <td>{{bean.studentnum}}</td>
                 <td>{{bean.type.name}}</td>
                 <td><a :href="'activityList?cid='+bean.id"><span class="glyphicon glyphicon-list"></span></a></td>
                 <td><a :href="'classStudent?cid='+bean.id"><span class="glyphicon glyphicon-list"></span></a></td>
@@ -124,6 +156,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-4 control-label">班级容量：</label>
+                            <div class="col-md-6">
+                                <input type="text" name="address" class="form-control" v-model="bean_get.studentmax">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-4 control-label">班级类型：</label>
                             <div class="col-md-6">
                                 <select class="form-control" v-model="bean_get.type">
@@ -149,9 +187,14 @@
             uri: "class",
             pagination: {},
             beans: [],
-            bean: {id: 0, name: "", address: "",studentmax:0,studentnum:0, type: {id: 0}},
-            bean_get: {id: 0, name: "", address: "",studentmax:0,studentnum:0, type: {id: 0}},
-            types: []
+            bean: {id: 0, name: "", address: "", studentmax: 0, studentnum: 0, type: {id: 0}},
+            bean_get: {id: 0, name: "", address: "", studentmax: 0, studentnum: 0, type: {id: 0}},
+            types: [],
+            /*关键字查找类型*/
+            keyword_type:"",
+            /*关键字*/
+            keyword:"",
+            isLook:""
         };
 
         var vue = new Vue({
@@ -169,10 +212,16 @@
                     })
                 },
                 list: function (start) {
-                    var url = this.uri+"?start="+start;
+                    var url ;
+                    alert(this.isLook);
+                    url= this.uri + "?start=" + start;
+                    if(this.isLook)
+                         url="lookup?type="+this.keyword_type+"&keyword="+this.keyword+"&start=" + start;
+                    alert(this.isLook);
                     axios.get(url).then(function (response) {
                         vue.beans = response.data.data.content;
                         vue.pagination = response.data.data;
+                        console.log(vue.beans);
                     })
                 },
                 add: function () {
@@ -209,12 +258,26 @@
                             alert("修改失败");
                     })
                 },
+                /*查询功能*/
+                lookup:function () {
+                    this.isLook=true;
+//                    alert("type:"+this.keyword_type+"---keyword:"+this.keyword);
+                    var url="lookup?type="+this.keyword_type+"&keyword="+this.keyword;
+/*                    设置当前为模糊查询状态*/
+
+                    axios.get(url).then(function (response) {
+                        vue.beans = response.data.data.content;
+                        vue.pagination = response.data.data;
+                        console.log(vue.beans);
+                    })
+
+                },
                 jump: function (page) {
                     jump(page, vue); //定义在adminHeader.html 中
                 },
                 jumpByNumber: function (start) {
                     jumpByNumber(start, vue);
-                },
+                }
             }
         })
     })

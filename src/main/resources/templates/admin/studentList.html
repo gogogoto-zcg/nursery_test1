@@ -39,6 +39,7 @@
             </tr>
             </tbody>
         </table>
+        <div th:replace="include/admin/adminPage::html"></div>
     </div>
 
     <div th:replace="include/admin/adminFoot::html"></div>
@@ -82,6 +83,12 @@
                         if(res.data.code==0)
                             vue.list(0);
                     })
+                },
+                jump: function (page) {
+                    jump(page, vue); //定义在adminHeader.html 中
+                },
+                jumpByNumber: function (start) {
+                    jumpByNumber(start, vue);
                 },
 
             }

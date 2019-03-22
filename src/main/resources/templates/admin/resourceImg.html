@@ -16,6 +16,12 @@
     <div th:include="include/admin/adminLeftMenu::html"></div>
 
     <div class="col-md-10 ">
+        <!--路径导航栏-->
+        <ol class="breadcrumb">
+            <li><a href="classPage">班级管理</a></li>
+            <li><a :href="'activityList?cid='+activity.aClass.id">{{activity.aClass.name}}</a></li>
+            <li class="active">{{activity.introduce}}</li>
+        </ol>
         <div class="col-md-6">
             <h4 class="text-info">图片管理:</h4>
             <table class="table table-bordered table-responsive ">
@@ -50,16 +56,25 @@
             uri: "resource",
             pagination:{},
             beans: [],
-            bean: ""
+            bean: "",
+            activity:{id:0}
         };
 
         var vue = new Vue({
             el: "#workingArea",
             data: data4Vue,
             mounted: function () {
+                this.getActivity();
                 this.list(0);
             },
             methods: {
+                getActivity:function () {
+                  var url="activity/"+aid;
+                  axios.get(url).then(function (res) {
+                        vue.activity=res.data.data;
+                        console.log(vue.activity);
+                  })
+                },
                 list: function (start) {
                     var url = "activity/" + aid + "/" + this.uri + "?start=" + start + "&fileType=jpg";
                     axios.get(url).then(function (res) {

@@ -17,6 +17,10 @@
 
     <div class="col-md-10">
 
+        <ol class="breadcrumb">
+            <li><a href="classPage">班级管理</a></li>
+            <li class="active">{{aClass.name}}</li>
+        </ol>
         <table class="table table-bordered table-responsive ">
             <thead>
             <tr>
@@ -55,15 +59,23 @@
             uri: "student",
             pagination: {},
             beans: [],
+            aClass:{}
         };
 
         var vue = new Vue({
             el: "#workingArea",
             data: data4Vue,
             mounted: function () {
+                this.getClass();
                 this.list(0);
             },
             methods: {
+                getClass:function () {
+                    var url="class/"+cid;
+                  axios.get(url).then(function (res) {
+                        vue.aClass=res.data.data;
+                  })
+                },
                 list: function (start) {
                     var url ="class/"+cid+"/"+ this.uri+"?start="+start+"&isRegister=true";
                     axios.get(url).then(function (response) {

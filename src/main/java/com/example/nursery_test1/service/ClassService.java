@@ -54,9 +54,24 @@ public class ClassService {
         classDao.save(bean);
     }
 
-
     /*按课程类型跟据学生还能容纳数倒叙查找课程*/
     public List<Class> getByTypeOrderByNeedDesc(Subclass subclass){
         return classDao.findByTypeOrderByStudentneedDesc(subclass);
+    }
+
+    /*跟据班级名称查询*/
+    public Page4Navigator<Class> listByNameLike(int start, int size, int navigatePages,String keyword) {
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(start, size, sort);
+        Page<Class> pageFromJPA = classDao.findByNameLike(keyword,pageable);
+        return new Page4Navigator<>(pageFromJPA, navigatePages);
+    }
+
+    /*跟据班级类别查询*/
+    public Page4Navigator<Class> listByTypeLike(int start, int size, int navigatePages,String keyword) {
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(start, size, sort);
+        Page<Class> pageFromJPA = classDao.findByTypeLike(keyword,pageable);
+        return new Page4Navigator<>(pageFromJPA, navigatePages);
     }
 }
