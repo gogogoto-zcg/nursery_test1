@@ -21,8 +21,8 @@
         </ol>
         <!-- Button trigger modal -->
 
-
-        <form class="form-inline">
+<!--查询模块-->
+        <div class="form-inline">
             <div class="form-group">
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal1">
                     新增班级
@@ -44,10 +44,10 @@
                 </div>
             </div>
             <div class="form-group">
-                <button @click="lookup">确定</button>
+                <button @click="search">查找</button>
+                <button @click="all">显示全部</button>
             </div>
-
-        </form>
+        </div>
 
         <table class="table table-bordered table-responsive ">
             <thead>
@@ -194,7 +194,7 @@
             keyword_type:"",
             /*关键字*/
             keyword:"",
-            isLook:""
+            isLook:false
         };
 
         var vue = new Vue({
@@ -213,16 +213,31 @@
                 },
                 list: function (start) {
                     var url ;
-                    alert(this.isLook);
                     url= this.uri + "?start=" + start;
                     if(this.isLook)
                          url="lookup?type="+this.keyword_type+"&keyword="+this.keyword+"&start=" + start;
-                    alert(this.isLook);
                     axios.get(url).then(function (response) {
                         vue.beans = response.data.data.content;
                         vue.pagination = response.data.data;
                         console.log(vue.beans);
                     })
+                },
+                /*查询功能*/
+                search:function () {
+                    this.isLook=true;
+//                    alert("type:"+this.keyword_type+"---keyword:"+this.keyword);
+                    var url="lookup?type="+this.keyword_type+"&keyword="+this.keyword;
+//                    var url="lookup";
+                    /*                    设置当前为模糊查询状态*/
+                    axios.get(url).then(function (response) {
+                        vue.beans = response.data.data.content;
+                        vue.pagination = response.data.data;
+                        console.log(vue.beans);
+                    })
+                },
+                all:function () {
+                    this.isLook=false;
+                    vue.list(0);
                 },
                 add: function () {
                     axios.post(this.uri, this.bean).then(function (response) {
@@ -257,20 +272,6 @@
                         } else
                             alert("修改失败");
                     })
-                },
-                /*查询功能*/
-                lookup:function () {
-                    this.isLook=true;
-//                    alert("type:"+this.keyword_type+"---keyword:"+this.keyword);
-                    var url="lookup?type="+this.keyword_type+"&keyword="+this.keyword;
-/*                    设置当前为模糊查询状态*/
-
-                    axios.get(url).then(function (response) {
-                        vue.beans = response.data.data.content;
-                        vue.pagination = response.data.data;
-                        console.log(vue.beans);
-                    })
-
                 },
                 jump: function (page) {
                     jump(page, vue); //定义在adminHeader.html 中

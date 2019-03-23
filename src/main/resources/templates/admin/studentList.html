@@ -16,6 +16,34 @@
     <div th:include="include/admin/adminLeftMenu::html"></div>
 
     <div class="col-md-10">
+
+
+        <!--查询模块-->
+        <div class="form-inline">
+            <div class="form-group">
+                <label class="col-md-6 control-label">查询类型：</label>
+                <div class="col-md-6">
+                    <select class="form-control" v-model="keyword_type">
+                        <option value="name">姓名</option>
+                        <option value="class">托管班级</option>
+                        <option value="parentName">家长姓名</option>
+                        <!--<option value="all">全相关字段</option>-->
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="keyword" class="control-label col-md-4">关键字：</label>
+                <div class="col-md-8">
+                    <input id="keyword" class="form-control" v-model="keyword">
+                </div>
+            </div>
+            <div class="form-group">
+                <button @click="search">查找</button>
+                <button @click="all">显示全部</button>
+            </div>
+        </div>
+
+
         <table class="table table-bordered table-responsive ">
             <thead>
             <tr>
@@ -57,7 +85,11 @@
             bean: {id:0,name:"",image:"",age:"",sex:"",school:"",isRegister:1,
                 user:{id:0,name:""},
                 aClass:{id:0,name:""}
-            }
+            },
+            keyword_type:"",
+            /*关键字*/
+            keyword:"",
+            isLook:false
         };
 
         var vue = new Vue({
@@ -69,11 +101,26 @@
             methods: {
                 list:function (start) {
                     var url=this.uri+"?isRegister=true&start="+start;
+                    if(this.islook)
+                        url="student_search?isRegister=true&type="+this.keyword_type+"&keyword="+this.keyword+"&start="+start;
                     axios.get(url).then(function (res) {
                         console.log(res.data.data.content);
                         vue.pagination=res.data.data;
                         vue.beans=res.data.data.content;
                     })
+                },
+                search:function () {
+                    this.islook=true;
+                    var url="student_search?isRegister=true&type="+this.keyword_type+"&keyword="+this.keyword;
+                    axios.get(url).then(function (res) {
+                        console.log(res.data.data.content);
+                        vue.pagination=res.data.data;
+                        vue.beans=res.data.data.content;
+                    })
+                },
+                all:function () {
+                    this.islook=false;
+                    this.list(0);
                 },
                 update:function (id) {
                     if(!checkDeleteLink())

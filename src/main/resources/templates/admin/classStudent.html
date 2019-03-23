@@ -17,10 +17,37 @@
 
     <div class="col-md-10">
 
+
         <ol class="breadcrumb">
             <li><a href="classPage">班级管理</a></li>
             <li class="active">{{aClass.name}}</li>
         </ol>
+
+        <!--查询模块-->
+        <div class="form-inline">
+            <div class="form-group">
+                <label class="col-md-6 control-label">查询类型：</label>
+                <div class="col-md-6">
+                    <select class="form-control" v-model="keyword_type">
+                        <option value="name">姓名</option>
+                        <option value="age">年龄</option>
+                        <option value="sex">性别</option>
+                        <!--<option value="all">全相关字段</option>-->
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="keyword" class="control-label col-md-4">关键字：</label>
+                <div class="col-md-8">
+                    <input id="keyword" class="form-control" v-model="keyword">
+                </div>
+            </div>
+            <div class="form-group">
+                <button @click="search">查找</button>
+                <button @click="all">显示全部</button>
+            </div>
+        </div>
+        <br>
         <table class="table table-bordered table-responsive ">
             <thead>
             <tr>
@@ -59,7 +86,11 @@
             uri: "student",
             pagination: {},
             beans: [],
-            aClass:{}
+            aClass:{},
+            keyword_type:"",
+            /*关键字*/
+            keyword:"",
+            isLook:false
         };
 
         var vue = new Vue({
@@ -78,11 +109,27 @@
                 },
                 list: function (start) {
                     var url ="class/"+cid+"/"+ this.uri+"?start="+start+"&isRegister=true";
+                    if(this.islook)
+                        url="class/"+cid+"/search?type="+this.keyword_type+"&keyword="+this.keyword+"?start="+start+"&isRegister=true";
                     axios.get(url).then(function (response) {
                         vue.beans = response.data.data.content;
                         vue.pagination = response.data.data;
                         console.log(vue.beans);
                     })
+                },
+                search:function () {
+//                class/{cid}search/
+                    this.isLook=true;
+                    var url="class/"+cid+"/search?type="+this.keyword_type+"&keyword="+this.keyword+"&isRegister=true";
+                    axios.get(url).then(function (res) {
+                        vue.beans = res.data.data.content;
+                        vue.pagination = res.data.data;
+                        console.log(vue.beans);
+                    })
+                },
+                all:function () {
+                    this.islook=false;
+                    this.list(0);
                 },
                 jump: function (page) {
                     jump(page, vue); //定义在adminHeader.html 中

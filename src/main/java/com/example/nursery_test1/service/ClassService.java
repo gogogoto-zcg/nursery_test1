@@ -63,7 +63,7 @@ public class ClassService {
     public Page4Navigator<Class> listByNameLike(int start, int size, int navigatePages,String keyword) {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Pageable pageable = new PageRequest(start, size, sort);
-        Page<Class> pageFromJPA = classDao.findByNameLike(keyword,pageable);
+        Page<Class> pageFromJPA = classDao.findByNameLike("%"+keyword+"%",pageable);
         return new Page4Navigator<>(pageFromJPA, navigatePages);
     }
 

@@ -82,8 +82,8 @@ public class ClassController {
     @GetMapping("lookup")
     public Object lookup(@RequestParam(value = "start", defaultValue = "0") int start,
                          @RequestParam(value = "size", defaultValue = "5") int size,
-                         @RequestParam("type")String type,
-                         @RequestParam("keyword")String keyword){
+                         @RequestParam(value = "type",defaultValue = "")String type,
+                         @RequestParam(value = "keyword",defaultValue = "")String keyword){
         Page4Navigator<Class> page=null;
         if(type.equals("name")){
             page=classService.listByNameLike(start,size,5,keyword);

@@ -91,11 +91,65 @@ public class StudentService {
 
 
     /*查找某班的所有学生并分页*/
-    public Page4Navigator<Student> listByRegisterAndClass(int start, int size, int navigatePages,Boolean b,int cid){
+    public Page4Navigator<Student> listByRegisterAndClass(int start, int size, int navigatePages,boolean b,int cid){
         Class c=classService.getOne(cid);
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Pageable pageable = new PageRequest(start, size, sort);
         Page<Student> pageFromJPA = studentDao.findByIsRegisterAndAClass(b,c,pageable);
+        return new Page4Navigator<>(pageFromJPA, navigatePages);
+    }
+
+    /*模糊查找某班的学生并分页*/
+    public Page4Navigator<Student> listByNameAndClass(int start, int size, int navigatePages,boolean b,Class c,String keyword){
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(start, size, sort);
+        Page<Student> pageFromJPA = studentDao.findByNameLikeAndIsRegisterAndAClass("%"+keyword+"%",b,c,pageable);
+        return new Page4Navigator<>(pageFromJPA, navigatePages);
+    }
+
+    /*模糊查找某班的学生并分页*/
+    public Page4Navigator<Student> listByAgeAndClass(int start, int size, int navigatePages,boolean b,Class c,String keyword){
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(start, size, sort);
+        Page<Student> pageFromJPA = studentDao.findByAgeLikeAndIsRegisterAndAClass("%"+keyword+"%",b,c,pageable);
+        return new Page4Navigator<>(pageFromJPA, navigatePages);
+    }
+    /*模糊查找某班的学生并分页*/
+    public Page4Navigator<Student> listBySexAndClass(int start, int size, int navigatePages,boolean b,Class c,String keyword){
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(start, size, sort);
+        Page<Student> pageFromJPA = studentDao.findBySexLikeAndIsRegisterAndAClass("%"+keyword+"%",b,c,pageable);
+        return new Page4Navigator<>(pageFromJPA, navigatePages);
+    }
+
+//    /*模糊查找某班的学生并分页*/
+//    public Page4Navigator<Student> listByAllAndClass(int start, int size, int navigatePages,boolean b,Class c,String keyword){
+//        Sort sort = new Sort(Sort.Direction.DESC, "id");
+//        Pageable pageable = new PageRequest(start, size, sort);
+//        Page<Student> pageFromJPA = studentDao.findByAllLikeAndRegisterAndAClass("%"+keyword+"%",b,c,pageable);
+//        return new Page4Navigator<>(pageFromJPA, navigatePages);
+//    }
+
+
+    /*模糊查找已入学学生并分页*/
+    public Page4Navigator<Student> listByName(int start, int size, int navigatePages,boolean b,String keyword){
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(start, size, sort);
+        Page<Student> pageFromJPA = studentDao.findByNameLikeAndIsRegister("%"+keyword+"%",b,pageable);
+        return new Page4Navigator<>(pageFromJPA, navigatePages);
+    }
+
+    public Page4Navigator<Student> listByClass(int start, int size, int navigatePages, boolean b, String keyword) {
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(start, size, sort);
+        Page<Student> pageFromJPA = studentDao.findByClassNameLikeAndIsRegister("%"+keyword+"%",b,pageable);
+        return new Page4Navigator<>(pageFromJPA, navigatePages);
+    }
+
+    public Page4Navigator<Student> listByParentName(int start, int size, int navigatePages, boolean b, String keyword) {
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(start, size, sort);
+        Page<Student> pageFromJPA = studentDao.findByParentNameLikeAndIsRegister("%"+keyword+"%",b,pageable);
         return new Page4Navigator<>(pageFromJPA, navigatePages);
     }
 }
