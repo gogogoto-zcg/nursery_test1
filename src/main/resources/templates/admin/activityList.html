@@ -62,7 +62,7 @@
 
         <!--图片上传-->
         <div class="container">
-            <form id="form" enctype="multipart/form-data">
+            <div id="form" >
                 <div class="row form-group">
                     <div class="col-md-8 col-md-offset-2">
                         <div class="col-md-2"><h4>活动备注</h4></div>
@@ -85,7 +85,7 @@
                 <div class="row form-group" align="center">
                     <button class="btn btn-lg btn-primary" @click="add">确认上传</button>
                 </div>
-            </form>
+            </div>
         </div>
         <div style="height: 100px;"></div>
     </div>
@@ -139,7 +139,7 @@
             pagination: {},
             beans: [],
             bean:{id:0,introduce:"",uploadTime:"",user:{id:0,name:""}},
-            aClass:{}
+            aClass:{id:0},
         };
 
         var vue = new Vue({
@@ -147,7 +147,7 @@
             data: data4Vue,
             mounted: function () {
                 this.getClass();
-                this.listActivity(0);
+                this.list(0);
             },
             methods: {
                 getClass:function () {
@@ -172,11 +172,11 @@
                     var url = "aClass/" + cid + "/" + this.uri + "?uid=" + uid;
                     alert(url);
                     axios.post(url, formData).then(function (res) {
-                        if (res.data.code == 0) vue.listActivity(0);
+                        if (res.data.code == 0) vue.list(0);
                     })
                 },
-                listActivity: function (start) {
-                    var url = "aClass/" + cid + "/activity";
+                list: function (start) {
+                    var url = "aClass/" + cid + "/activity?start="+start;
                     axios.get(url).then(function (res) {
                         vue.beans = res.data.data.content;
                         vue.pagination = res.data.data;
@@ -195,7 +195,7 @@
                     alert(url);
                     axios.delete(url).then(function (res) {
                         if(res.data.code==0)
-                        vue.listActivity(0);
+                        vue.list(0);
                     })
                 },
                 update:function () {
@@ -203,7 +203,7 @@
                         if(res.data.code==0)
                         {
                             alert("修改成功");
-                            vue.listActivity(0);
+                            vue.list(0);
                         }
 
                     })
