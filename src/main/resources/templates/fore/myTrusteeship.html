@@ -2,9 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:include="include/fore/foreHeader::html('我的托管')">
 </head>
-<!--<script src="webjars/jquery/2.0.0/jquery.min.js"></script>-->
-<!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
-<!--<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>-->
+<script src="webjars/jquery/2.0.0/jquery.min.js"></script>
+<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">
+<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>
 
 <body>
 <div id="workingArea" class="container-fluid">
@@ -15,7 +15,54 @@
     <div th:include="include/fore/foreLeftMenu::html"></div>
 
     <div class="col-md-10">
+        <div class="form-group col-md-12">
+            <label class="col-md-6 control-label">托管对象：</label>
+            <div class="col-md-6">
+                <select class="form-control" v-model="sid" @change="getClass(sid)">
+                    <option v-for="student in students" :value="student.id">{{student.name}}|{{student.aClass.name}}
+                    </option>
+                    <!--<option value="all">全相关字段</option>-->
+                </select>
+            </div>
+        </div>
+        <br>
+        <hr>
+        <div class="col-md-12" style="min-height: 300px;">
+            <h4 class="text-info text-left">班级动态</h4>
+            <br>
+            <div class="col-md-6" style="height: 300px;overflow:auto;" v-for="activity in activityList">
+                <br>
+                <div >
+                    <div class="col-md-4"><p class="label label-info">活动名称
+                        <p></div>
+                    <div class="col-md-8"><p>{{activity.introduce}}</p></div>
+                </div>
+                <div>
+                    <div class="col-md-4"><p class="label label-info">上传时间
+                        <p></div>
+                    <div class="col-md-8"><p>{{activity.uploadTime|dateformat}}</p></div>
+                </div>
+                <hr>
+                <br>
+                <h4 class="text-info "><b>活动动态</b></h4>
+                <div v-for="activityResource in activity.activityResourceList" class="col-md-3">
+                    <div v-if="activityResource.fileType=='jpg'">
+                        <img height="70px" width="70px" :src="activityResource.file_url" class="img-rounded">
+                    </div>
+                    <div v-if="activityResource.fileType=='mp4'">
+                        <video height="70px" width="70px" :src="activityResource.file_url" ></video>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+        <div align="center">
+            <div  th:replace="include/admin/adminPage::html"></div>
+        </div>
+
+        <div  style="height: 100px"></div>
     </div>
+
 
     <div th:replace="include/fore/foreFoot::html"></div>
 </div>
@@ -23,20 +70,73 @@
 
 <script>
     $(function () {
-
+        /*时间格式化*/
+        Vue.filter('dateformat', function (dataStr) {
+            return moment(dataStr).format('YYYY-MM-DD HH:mm:ss')
+        });
 
         var data4Vue = {
             uri: "",
-            bean: ""
+            bean: "",
+            user: {},
+            students: [],
+            /*查询学生id*/
+            sid: "",
+            aClass: {id: 0},
+            pagination: {},
+            activityList: []
         };
 
         var vue = new Vue({
             el: "#workingArea",
             data: data4Vue,
             mounted: function () {
-
+                this.getUser();
+                this.getStudent();
             },
-            methods: {}
+            methods: {
+                getUser: function () {
+                    var uid = [[${session.user.id}]];
+                    var url = "user/" + uid;
+                    axios.get(url).then(function (res) {
+                        vue.user = res.data.data;
+                        console.log(this.user);
+                    })
+                },
+                getStudent: function () {
+                    var uid = [[${session.user.id}]];
+                    var url = "user/" + uid + "/student?isRegister=true";
+                    axios.get(url).then(function (res) {
+                        vue.students = res.data.data;
+                        console.log(vue.students);
+                    })
+                },
+                getClass: function (id) {
+                    var url = "student/" + id;
+                    axios.get(url).then(function (res) {
+                        vue.aClass = res.data.data.aClass;
+//                        console.log(vue.aClass);
+
+                        vue.list(0);
+                    })
+                },
+                list: function (start) {
+
+                    var url = "aClass/" + this.aClass.id + "/activity?start=" + start;
+
+                    axios.get(url).then(function (res) {
+                        vue.pagination = res.data.data;
+                        vue.activityList = res.data.data.content;
+                        console.log(vue.activityList);
+                    })
+                },
+                jump: function (page) {
+                    jump(page, vue); //定义在adminHeader.html 中
+                },
+                jumpByNumber: function (start) {
+                    jumpByNumber(start, vue);
+                }
+            }
         })
     })
 </script>

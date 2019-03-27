@@ -180,6 +180,7 @@
                     axios.get(url).then(function (res) {
                         vue.beans = res.data.data.content;
                         vue.pagination = res.data.data;
+                        console.log(vue.beans);
                     })
                 },
                 getBean:function (id) {

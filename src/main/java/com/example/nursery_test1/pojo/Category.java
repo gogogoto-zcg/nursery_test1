@@ -1,9 +1,11 @@
 package com.example.nursery_test1.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "category")
@@ -22,9 +24,12 @@ public class Category {
 //    //mappedBy="category"中的category是Subclass中的category属性
 
     //    @JsonIgnoreProperties(value = { "Category" })
-    @Transient
+//    @Transient
 //    @OneToMany(fetch=FetchType.EAGER,cascade={CascadeType.REMOVE},mappedBy="Category")
-    private List<Subclass> subclassList;
+
+    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, mappedBy = "category")
+    @JsonIgnoreProperties(value = "category")
+    private Set<Subclass> subclassList;
 
     public int getId() {
         return id;
@@ -50,21 +55,22 @@ public class Category {
         this.description = description;
     }
 
-    public List<Subclass> getSubclassList() {
+
+    public Set<Subclass> getSubclassList() {
         return subclassList;
     }
 
-    public void setSubclassList(List<Subclass> subclassList) {
+    public void setSubclassList(Set<Subclass> subclassList) {
         this.subclassList = subclassList;
     }
 
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", subclassList=" + subclassList +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Category{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", description='" + description + '\'' +
+//                ", subclassList=" + subclassList +
+//                '}';
+//    }
 }

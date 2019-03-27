@@ -1,6 +1,7 @@
 package com.example.nursery_test1.pojo;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -20,9 +21,10 @@ public class Subclass {
 
     @ManyToOne
     @JoinColumn(name="cid")
-    @JsonBackReference
+//    @JsonBackReference
     /*不会重复遍历自己*/
-//    @JsonIgnoreProperties(value = { "Subclass" })
+//    @JsonIgnore
+    @JsonIgnoreProperties(value = "subclassList")
     private Category category;
 
     public int getId() {
@@ -57,13 +59,13 @@ public class Subclass {
         this.category = category;
     }
 
-    @Override
-    public String toString() {
-        return "Subclass{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", category=" + category +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Subclass{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", description='" + description + '\'' +
+//                ", category=" + category +
+//                '}';
+//    }
 }

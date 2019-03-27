@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CategoryService {
@@ -33,15 +34,17 @@ public class CategoryService {
 
     /*删除一个分类的条件判定*/
     public boolean deleteById(int id) {
-        Category category = getOne(id);
-        List<Subclass> subclasses=subclassService.listByCategory(category);
-        /*该教学性质下没有子分类,允许删除*/
-        if(subclassService.listByCategory(category).size()==0) {
-            categoryDao.deleteById(id);
-            return  true;
-        }
-        else
-            return false;
+//        Category category = getOne(id);
+//        Set<Subclass> subclasses=subclassService.listByCategory(category);
+//        /*该教学性质下没有子分类,允许删除*/
+//        if(subclassService.listByCategory(category).size()==0) {
+//            categoryDao.deleteById(id);
+//            return  true;
+//        }
+//        else
+//            return false;
+        categoryDao.deleteById(id);
+        return true;
     }
 
     /*更新一个分类信息*/
@@ -59,7 +62,7 @@ public class CategoryService {
 
     /*为一个category设置子分类*/
     public void setSubclass(Category bean){
-        List<Subclass> byCategory = subclassService.listByCategory(bean);
+        Set<Subclass> byCategory = subclassService.listByCategory(bean);
         bean.setSubclassList(byCategory);
     }
 

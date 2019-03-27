@@ -19,9 +19,9 @@ public class ActivityResource {
 
     @ManyToOne()
     @JoinColumn(name = "aid")
-    //次注解防止无限递归
-//    @JsonBackReference
-//    @JsonIgnoreProperties(value = { "users" })
+
+    /*json忽视value属性*/
+    @JsonIgnoreProperties(value = { "activityResourceList" })
     private Activity activity;
 
     public int getId() {

@@ -42,6 +42,7 @@ public class MyWebMvc implements WebMvcConfigurer {
         registry.addViewController("/myRegister").setViewName("fore/myRegister");
         registry.addViewController("/categoryPage").setViewName("fore/categoryPage");
         registry.addViewController("/subClassPage").setViewName("fore/subClassPage");
+        registry.addViewController("/myTrusteeship").setViewName("fore/myTrusteeship");
 
     }
 }

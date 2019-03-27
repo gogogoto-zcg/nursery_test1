@@ -22,10 +22,14 @@ public class Activity {
 
     @ManyToOne
     @JoinColumn(name="cid")
+    @JsonIgnoreProperties(value = "activitySet")
     private Class aClass;
 
-    @Transient
-    List<ActivityResource> activityResourceList;
+    @OneToMany(mappedBy = "activity")
+    @JsonIgnoreProperties(value = "activity")
+    private List<ActivityResource> activityResourceList;
+
+
 
     public int getId() {
         return id;
@@ -67,6 +71,13 @@ public class Activity {
         this.aClass = aClass;
     }
 
+    public List<ActivityResource> getActivityResourceList() {
+        return activityResourceList;
+    }
+
+    public void setActivityResourceList(List<ActivityResource> activityResourceList) {
+        this.activityResourceList = activityResourceList;
+    }
     @Override
     public String toString() {
         return "Activity{" +

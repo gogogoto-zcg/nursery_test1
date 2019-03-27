@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class SubclassService {
@@ -26,7 +27,7 @@ public class SubclassService {
         subclassDao.save(bean);
     }
 
-    public List<Subclass> listByCategory(Category category){
+    public Set<Subclass> listByCategory(Category category){
         return subclassDao.findByCategory(category);
     }
 

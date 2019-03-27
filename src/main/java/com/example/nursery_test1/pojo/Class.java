@@ -3,6 +3,7 @@ package com.example.nursery_test1.pojo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "class")
@@ -18,8 +19,9 @@ public class Class {
     private int studentnum;
     private int studentneed;
 
-
-
+    @OneToMany
+    @JsonIgnoreProperties(value = "aClass")
+    private Set<Activity> activitySet;
 
     @ManyToOne
     @JoinColumn(name = "tid")

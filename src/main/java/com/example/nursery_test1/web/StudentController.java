@@ -34,6 +34,11 @@ public class StudentController {
         return Result.success(student);
     }
 
+    @GetMapping("student/{id}")
+        public Object getOne(@PathVariable("id")int id){
+            Student s=studentService.get(id);
+            return Result.success(s);
+        }
 
     /**
      * 查找某用户的托管生

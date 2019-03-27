@@ -95,4 +95,5 @@ public class ClassController {
         }
         return Result.success(page);
     }
+
 }

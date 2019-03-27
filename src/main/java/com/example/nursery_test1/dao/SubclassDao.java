@@ -7,8 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Set;
 
 public interface SubclassDao extends JpaRepository<Subclass,Integer>{
     Page<Subclass> findByCategory(Category category, Pageable pageable);
-    List<Subclass> findByCategory(Category category);
+    Set<Subclass> findByCategory(Category category);
 }
