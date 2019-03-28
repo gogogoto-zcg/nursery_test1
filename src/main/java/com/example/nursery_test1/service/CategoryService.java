@@ -28,8 +28,8 @@ public class CategoryService {
     }
 
     /*新增一个分类*/
-    public void add(Category bean) {
-        categoryDao.save(bean);
+    public Category add(Category bean) {
+        return categoryDao.save(bean);
     }
 
     /*删除一个分类的条件判定*/

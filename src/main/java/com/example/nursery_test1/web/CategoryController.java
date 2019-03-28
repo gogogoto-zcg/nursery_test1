@@ -3,11 +3,16 @@ package com.example.nursery_test1.web;
 import com.example.nursery_test1.pojo.Category;
 import com.example.nursery_test1.service.CategoryService;
 import com.example.nursery_test1.service.SubclassService;
+import com.example.nursery_test1.util.FileUtils;
 import com.example.nursery_test1.util.Page4Navigator;
 import com.example.nursery_test1.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -38,8 +43,25 @@ public class CategoryController {
      * @return
      */
     @PostMapping("category")
-    public Object categoryAdd(@RequestBody Category bean) {
-        categoryService.add(bean);
+    public Object categoryAdd(Category bean, MultipartFile[] file) {
+        Category c = categoryService.add(bean);
+        if (file.length != 0) {
+            String img_folder = "category1";
+            String img_name = String.valueOf(c.getId()) + ".jpg";
+            String img_path = null;
+            try {
+                img_path = ResourceUtils.getURL("classpath:").getPath() + "static/" + img_folder;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if (FileUtils.upload(file[0], img_path, img_name))
+                c.setImg(img_folder + "/" + img_name);
+            else
+                return Result.fail("文件上传失败");
+
+            categoryService.update(c);
+        }
         return Result.success();
     }
 
@@ -53,10 +75,17 @@ public class CategoryController {
     @DeleteMapping("category/{id}")
     public Object deleteById(@PathVariable("id") int id) {
         Boolean b = categoryService.deleteById(id);
-        if (b)
-            return Result.success();
-        else
-            return Result.fail("该教学性质下还有子分类");
+        String img_folder = "category1";
+        String img_name = id + ".jpg";
+        String img_path = null;
+        try {
+            img_path = ResourceUtils.getURL("classpath:").getPath() + "static/" + img_folder;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        File f = new File(img_path + "/" + img_name);
+        f.delete();
+        return Result.success();
     }
 
     /**
@@ -66,7 +95,22 @@ public class CategoryController {
      * @return
      */
     @PutMapping("category")
-    public Object update(@RequestBody Category bean) {
+    public Object update(Category bean, MultipartFile[] file) {
+        if (file.length != 0) {
+            String img_folder = "category1";
+            String img_name = String.valueOf(bean.getId()) + ".jpg";
+            String img_path = null;
+            try {
+                img_path = ResourceUtils.getURL("classpath:").getPath() + "static/" + img_folder;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if (FileUtils.upload(file[0], img_path, img_name))
+                bean.setImg(img_folder + "/" + img_name);
+            else
+                return Result.fail("文件上传失败");
+        }
         categoryService.update(bean);
         return Result.success();
     }

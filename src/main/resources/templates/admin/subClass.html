@@ -31,6 +31,7 @@
                 <th>ID</th>
                 <th>子分类名称</th>
                 <th>子分类描述</th>
+                <th>宣传图片</th>
                 <th>删除</th>
                 <th>编辑</th>
             </tr>
@@ -42,6 +43,13 @@
                 <td>
                     <p style="width: 200px;white-space: nowrap;text-overflow: ellipsis; overflow: hidden;"
                        :title="bean.description">{{bean.description}}</p>
+                </td>
+                <td>
+
+                <div v-if="bean.img!=null">
+                <img height="20px" width="20px" :src="bean.img">
+                </div>
+                <div v-else> null</div>
                 </td>
                 <td><a href="#" @click="deleteBean(bean.id)"><span class="glyphicon glyphicon-trash"></span></a></td>
                 <td><a href="#" @click="getBean(bean.id)" data-toggle="modal" data-target="#myModal"><span
@@ -78,6 +86,12 @@
                                         </textarea>
                             </div>
                         </div>
+                        <div class="form-group">
+                        <label class="col-md-4 control-label">宣传图片：</label>
+                        <div class="col-md-6">
+                        <input type="file" @change="getFile($event)" >
+                        </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -112,6 +126,12 @@
                                         </textarea>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">宣传图片：</label>
+                            <div class="col-md-6">
+                                <input type="file" @change="getFile($event)" >
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -132,9 +152,10 @@
             uri: "subclass",
             pagination: {},
             beans: [],
-            bean: {id: 0, name: "", description: "", category: {id: 0}},
-            bean_get: {id: 0, name: "", description: "", category: {id: 0}},
-            category:{id:0}
+            bean: {id: 0, name: "", description: "",img:"", category: {id: 0}},
+            bean_get: {id: 0, name: "", description: "",img:"", category: {id: 0}},
+            category:{id:0},
+            file:""
         };
 
         var vue = new Vue({
@@ -161,7 +182,12 @@
                     })
                 },
                 add: function () {
-                    axios.post(this.uri, this.bean).then(function (response) {
+                    var formData=new FormData();
+                    formData.append("name",this.bean.name);
+                    formData.append("description",this.bean.description);
+                    formData.append("category",this.bean.category.id);
+                    formData.append("file",this.file);
+                    axios.post(this.uri, formData).then(function (response) {
                         if (response.data.code == 0) {
 //                            alert("增加成功");
                             vue.bean = {id: 0, name: "", description: "", category: {id: 0}};
@@ -187,12 +213,22 @@
                     })
                 },
                 update: function () {
-                    axios.put(this.uri, this.bean_get).then(function (response) {
+                    var formData=new FormData();
+                    formData.append("id",this.bean_get.id);
+                    formData.append("name",this.bean_get.name);
+                    formData.append("description",this.bean_get.description);
+                    formData.append("category",this.bean_get.category.id);
+                    formData.append("file",this.file);
+                    axios.put(this.uri, formData).then(function (response) {
                         if (response.data.code == 0) {
                             vue.list(0);
                         } else
                             alert("修改失败");
                     })
+                },
+                getFile:function (event) {
+                    this.file=event.target.files[0];
+                    console.log(this.file);
                 },
                 jump: function (page) {
                     jump(page, vue); //定义在adminHeader.html 中

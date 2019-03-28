@@ -28,15 +28,28 @@
         <div class="col-md-6 text-center" v-for="bean in beans" style="height: 300px">
             <h3>{{bean.name}}</h3>
             <p>{{bean.description}}</p>
-            <span v-for="subclass in bean.subclassList">
-                {{subclass.name}}
-            </span>
-            <br>
-            <a :href="'subClassPage?cid='+bean.id">了解更多</a>
+            <div class="col-md-12" style="min-height: 150px; ">
+                <div class="col-md-3" v-for="subclass in bean.subclassList">
+                    <p align="center">
+                        {{subclass.name}}
+                    </p>
+                    <div v-if="subclass.img!=null">
+                        <img height="88px" width="88px" :src="subclass.img" class="img-rounded">
+                    </div>
+                    <div v-else> </div>
+                </div>
+            </div>
+            <div class="col-md-12" style="border: 2px black  ">
+                <br>
+                <a :href="'subClassPage?cid='+bean.id">了解更多</a>
+            </div>
+
         </div>
     </div>
 
-    <div th:replace="include/fore/foreFoot::html"></div>
+
+<!--<div style="height: 100px"></div>-->
+    <!--<div th:replace="include/fore/foreFoot::html"></div>-->
 </div>
 </body>
 
@@ -46,7 +59,7 @@
 
         var data4Vue = {
             uri: "category",
-            beans:[],
+            beans: [],
             bean: ""
         };
 
@@ -57,9 +70,9 @@
                 this.list();
             },
             methods: {
-                list:function () {
+                list: function () {
                     axios.get(this.uri).then(function (res) {
-                        vue.beans=res.data.data.content;
+                        vue.beans = res.data.data.content;
                         console.log(vue.beans);
                     })
                 }

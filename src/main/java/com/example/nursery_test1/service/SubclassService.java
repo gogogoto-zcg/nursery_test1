@@ -23,8 +23,8 @@ public class SubclassService {
     CategoryService categoryService;
 
     /*为某分类增加子分类*/
-    public void add( Subclass bean) {
-        subclassDao.save(bean);
+    public Subclass add( Subclass bean) {
+        return subclassDao.save(bean);
     }
 
     public Set<Subclass> listByCategory(Category category){

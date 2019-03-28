@@ -19,6 +19,8 @@ public class Subclass {
 
     private String description;
 
+    private String img;
+
     @ManyToOne
     @JoinColumn(name="cid")
 //    @JsonBackReference
@@ -59,7 +61,14 @@ public class Subclass {
         this.category = category;
     }
 
-//    @Override
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+    //    @Override
 //    public String toString() {
 //        return "Subclass{" +
 //                "id=" + id +

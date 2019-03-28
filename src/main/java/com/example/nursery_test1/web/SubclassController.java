@@ -2,12 +2,17 @@ package com.example.nursery_test1.web;
 
 import com.example.nursery_test1.pojo.Subclass;
 import com.example.nursery_test1.service.SubclassService;
+import com.example.nursery_test1.util.FileUtils;
 import com.example.nursery_test1.util.Page4Navigator;
 import com.example.nursery_test1.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.openmbean.OpenMBeanConstructorInfo;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -22,8 +27,24 @@ public class SubclassController {
      * @return
      */
     @PostMapping("subclass")
-    public Object subclassAdd(@RequestBody Subclass bean) {
-        subclassService.add(bean);
+    public Object subclassAdd(Subclass bean, MultipartFile[] file) {
+        Subclass s=subclassService.add(bean);
+        if (file.length != 0) {
+            String img_folder = "img/subclass";
+            String img_name = String.valueOf(s.getId()) + ".jpg";
+            String img_path = null;
+            try {
+                img_path = ResourceUtils.getURL("classpath:").getPath() + "static/" + img_folder;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if (FileUtils.upload(file[0], img_path, img_name))
+                s.setImg(img_folder + "/" + img_name);
+            else
+                return Result.fail("文件上传失败");
+            subclassService.update(s);
+        }
         return Result.success();
     }
 
@@ -62,6 +83,16 @@ public class SubclassController {
     @DeleteMapping("subclass/{id}")
     public Object delete(@PathVariable("id") int id) {
         subclassService.delete(id);
+        String img_folder = "img/subclass";
+        String img_name = id + ".jpg";
+        String img_path = null;
+        try {
+            img_path = ResourceUtils.getURL("classpath:").getPath() + "static/" + img_folder;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        File f = new File(img_path + "/" + img_name);
+        f.delete();
         return Result.success();
     }
 
@@ -84,7 +115,22 @@ public class SubclassController {
      * @return
      */
     @PutMapping("subclass")
-    public Object update(@RequestBody Subclass bean) {
+    public Object update(Subclass bean,MultipartFile[] file) {
+        if (file.length != 0) {
+            String img_folder = "img/subclass";
+            String img_name = String.valueOf(bean.getId()) + ".jpg";
+            String img_path = null;
+            try {
+                img_path = ResourceUtils.getURL("classpath:").getPath() + "static/" + img_folder;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if (FileUtils.upload(file[0], img_path, img_name))
+                bean.setImg(img_folder + "/" + img_name);
+            else
+                return Result.fail("文件上传失败");
+        }
         subclassService.update(bean);
         return Result.success();
     }

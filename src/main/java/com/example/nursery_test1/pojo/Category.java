@@ -17,6 +17,7 @@ public class Category {
     private int id;
     private String name;
     private String description;
+    private String img;
 
     //    @OneToMany(mappedBy = "category",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 //    //级联保存、更新、删除、刷新;延迟加载。当删除用户，会级联删除该用户的所有文章
@@ -64,7 +65,15 @@ public class Category {
         this.subclassList = subclassList;
     }
 
-//    @Override
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    //    @Override
 //    public String toString() {
 //        return "Category{" +
 //                "id=" + id +

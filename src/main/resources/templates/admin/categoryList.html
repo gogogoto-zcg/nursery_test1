@@ -29,6 +29,7 @@
                 <th>ID</th>
                 <th>分类名称</th>
                 <th>分类描述</th>
+                <!--<th>宣传图片</th>-->
                 <th>开设课程</th>
                 <th>删除</th>
                 <th>编辑</th>
@@ -42,6 +43,13 @@
                     <p style="width: 100px;white-space: nowrap;text-overflow: ellipsis; overflow: hidden;"
                        :title="bean.description">{{bean.description}}</p>
                 </td>
+                <!--<td>-->
+
+                    <!--<div v-if="bean.img!=null">-->
+                        <!--<img height="20px" width="20px" :src="bean.img">-->
+                    <!--</div>-->
+                    <!--<div v-else> null</div>-->
+                <!--</td>-->
                 <td><a :href="'subClass?cid='+bean.id"><span class="glyphicon glyphicon-list"></span></a></td>
                 <td><a href="#" @click="deleteBean(bean.id)"><span class="glyphicon glyphicon-trash"></span></a></td>
                 <td><a href="#" @click="getBean(bean.id)" data-toggle="modal" data-target="#myModal"><span
@@ -54,7 +62,7 @@
     <div th:replace="include/admin/adminFoot::html"></div>
 
 
-<!--模态框-->
+    <!--模态框-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -79,11 +87,18 @@
                                        id="inputDescription" placeholder="Description">
                             </div>
                         </div>
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-md-4 control-label">宣传图片：</label>-->
+                            <!--<div class="col-md-6">-->
+                                <!--<input type="file" @change="getFile($event)" >-->
+                            <!--</div>-->
+                        <!--</div>-->
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @click="update" data-dismiss="modal">Save changes</button>
+                    <button type="button" class="btn btn-primary" @click="update" data-dismiss="modal">Save changes
+                    </button>
                 </div>
             </div>
         </div>
@@ -97,7 +112,8 @@
             uri: "category",
             pagination: {},
             beans: [],
-            bean: {id: 0, name: "",description:""}
+            bean: {id: 0, name: "", description: "",img:""},
+            file:""
         };
 
         var vue = new Vue({
@@ -121,8 +137,12 @@
                         vue.bean = response.data.data;
                     })
                 },
+
                 deleteBean: function (id) {
-                    if(!checkDeleteLink())
+                    /*级联删除的提示*/
+                    var confirmDelete = confirm("此操作将同时删除该分类下的所有子分类");
+                    if (confirmDelete) ;
+                    else
                         return;
                     var url = this.uri + "/" + id;
                     axios.delete(url).then(function (response) {
@@ -133,8 +153,14 @@
                             alert(response.data.message);
                     })
                 },
-                update:function () {
-                    axios.put(this.uri,this.bean).then(function (response) {
+                update: function () {
+                    var formData=new FormData();
+                    formData.append("id",this.bean.id);
+                    formData.append("name",this.bean.name);
+                    formData.append("description",this.bean.description);
+                    formData.append("img",this.bean.img);
+                    formData.append("file",this.file);
+                    axios.put(this.uri, formData).then(function (response) {
                         if (response.data.code == 0) {
                             alert("修改成功");
                             vue.list(0);
@@ -142,6 +168,10 @@
                         else
                             alert("修改失败")
                     })
+                },
+                getFile:function (event) {
+                    this.file=event.target.files[0];
+                    console.log(this.file);
                 },
                 jump: function (page) {
                     jump(page, vue); //定义在adminHeader.html 中
