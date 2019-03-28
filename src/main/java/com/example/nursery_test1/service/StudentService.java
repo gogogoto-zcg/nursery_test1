@@ -51,10 +51,7 @@ public class StudentService {
     /*跟据isRegister查出指定用户的报名情况*/
     public List<Student> list(int uid, boolean isRegister) {
         User u = userService.get(uid);
-        if (isRegister)
-            return studentDao.findByUserAndIsRegister(u, isRegister);
-        else
-            return studentDao.findByUser(u);
+        return studentDao.findByUserAndIsRegister(u, isRegister);
 
     }
 

@@ -59,12 +59,12 @@
             </div>
 
         </form>
-        <form class="col-md-6">
+        <form class="form-horizontal col-md-6">
             <div class="form-group">
                 <label class="col-md-4 control-label">选择托管对象：</label>
                 <div class="col-md-6">
                     <select class="form-control" v-model="bean.student">
-                        <option v-for="student in students" :value="student">{{student.name}}</option>
+                        <option v-for="student in students" :value="student">{{student.name}}|{{student.state}}</option>
                     </select>
                 </div>
             </div>
@@ -131,6 +131,7 @@
                     var url = "user/" + this.bean.user.id + "/student?isRegister="+this.bean.student.isRegister;
                     axios.get(url).then(function (response) {
                         vue.students = response.data.data;
+                        console.log(vue.students);
                     })
                 },
                 add: function () {
