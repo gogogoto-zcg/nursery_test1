@@ -22,7 +22,7 @@ public class Activity {
 
     @ManyToOne
     @JoinColumn(name="cid")
-    @JsonIgnoreProperties(value = "activitySet")
+//    @JsonIgnoreProperties(value = "activityList")
     private Class aClass;
 
     @OneToMany(mappedBy = "activity")

@@ -117,7 +117,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">班级类型：</label>
                             <div class="col-md-6">
-                                <select class="form-control" v-model="bean.type">
+                                <select name="type" class="form-control" v-model="bean.type">
                                     <option v-for="type in types" :value="type">{{type.name}}</option>
                                 </select>
                             </div>
@@ -126,7 +126,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @click="add" data-dismiss="modal">Post</button>
+                    <button id="add" type="button" class="btn btn-primary" @click="add" >Post</button>
                 </div>
             </div>
         </div>
@@ -142,7 +142,7 @@
                     <h4 class="modal-title" id="myModalLabel">修改子分类信息</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal">
+                    <form id="form_upload" class="form-horizontal">
                         <div class="form-group">
                             <label class="col-md-4 control-label">班级名称：</label>
                             <div class="col-md-6">
@@ -158,13 +158,13 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">班级容量：</label>
                             <div class="col-md-6">
-                                <input type="text" name="address" class="form-control" v-model="bean_get.studentmax">
+                                <input type="text" name="studentmax" class="form-control" v-model="bean_get.studentmax">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-4 control-label">班级类型：</label>
                             <div class="col-md-6">
-                                <select class="form-control" v-model="bean_get.type">
+                                <select name="type" class="form-control" v-model="bean_get.type">
                                     <option v-for="type in types" :value="type">{{type.name}}</option>
                                 </select>
                             </div>
@@ -173,7 +173,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @click="update" data-dismiss="modal">Modify</button>
+                    <button id="upload" type="button" class="btn btn-primary" @click="update" >Modify</button>
                 </div>
             </div>
         </div>
@@ -240,6 +240,15 @@
                     vue.list(0);
                 },
                 add: function () {
+                    /*bootstrap提交验证*/
+                    var validator= $('form').data('bootstrapValidator').validate();
+                    if(!validator.isValid()){
+                        //没有通过校验
+                        return;
+                    } else {
+                        //通过校验，可进行提交等操作
+                        $('#add').attr("data-dismiss","modal");
+                    }
                     axios.post(this.uri, this.bean).then(function (response) {
                         if (response.data.code == 0) {
 //                            alert("增加成功");
@@ -266,6 +275,15 @@
                     })
                 },
                 update: function () {
+                    /*bootstrap提交验证*/
+                    var validator= $('#form_upload').data('bootstrapValidator').validate();
+                    if(!validator.isValid()){
+                        //没有通过校验
+                        return;
+                    } else {
+                        //通过校验，可进行提交等操作
+                        $('#upload').attr("data-dismiss","modal");
+                    }
                     axios.put(this.uri, this.bean_get).then(function (response) {
                         if (response.data.code == 0) {
                             vue.list(0);
@@ -282,5 +300,71 @@
             }
         })
     })
+</script>
+
+<!--表单校验-->
+<script>
+    $(function () {
+        $('form').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+//                valid: 'glyphicon glyphicon-ok',
+//                invalid: 'glyphicon glyphicon-remove',
+//                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                /*教学分类*/
+                name:{
+                    validators:{
+                        notEmpty:{
+                            message:'班级名称不能为空'
+                        }
+                    }
+                },
+//                地址
+                address:{
+                    validators:{
+                        notEmpty:{
+                            message:'班级地址不能为空'
+                        }
+                    }
+                },
+//                最大学生数
+                studentmax:{
+                    validators:{
+                        notEmpty:{
+                            message:'班级容量不能为空'
+                        },
+                        regexp: {
+                            /*年龄1-120*/
+                            regexp: /^\d{2}$/,
+                            message: "请输入两位数的合法数字"
+                        }
+
+                    }
+                },
+//                班级类型
+                type: {
+                    message: '班级验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '请选择一个班级类型'
+                        },
+                        callback: {
+//                            message: '必须选择一个文章类型',
+                            callback: function (value, validator) {
+                                if (value == -1) {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
 </script>
 </html>

@@ -6,6 +6,9 @@
 <!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
 <!--<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>-->
 
+<!--文本校验-->
+<link href="bootstrapValidator/bootstrapValidator.min.css" rel="stylesheet">
+<script type="text/javascript" src="bootstrapValidator/bootstrapValidator.min.js"></script>
 
 <body>
 <div id="workingArea" class="container-fluid">
@@ -51,11 +54,11 @@
             <div class="form-group">
                 <label class="col-md-4 control-label">学校地址：</label>
                 <div class="col-md-6">
-                    <input name="school" class="form-control" v-model="bean.student.school"/>
+                    <input name="school"  class="form-control" v-model="bean.student.school"/>
                 </div>
             </div>
             <div class="form-group">
-                <button class="form-control btn-info " @click="addStudent">确定</button>
+                <button id="submitbtn" type="submit" class="form-control btn-info " @click="addStudent">提交学员信息</button>
             </div>
 
         </form>
@@ -93,8 +96,11 @@
         var data4Vue = {
             uri: "register",
             bean: {
-                id: 0, student: {id: 0, name: "", age: "", sex: "", image: "", school: "",isRegister:false,state:"已报名"}, user: {id: 0},
-                type: {id: 0},ispay:false
+                id: 0,
+                student: {id: 0, name: "", age: "", sex: "", image: "", school: "", isRegister: false, state: "已报名"},
+                user: {id: 0},
+                type: {id: 0},
+                ispay: false
             },
             types: [],
             students: [],
@@ -128,7 +134,7 @@
 //                    this.bean.img = event.target.files[0];
                 },
                 getStudent: function () {
-                    var url = "user/" + this.bean.user.id + "/student?isRegister="+this.bean.student.isRegister;
+                    var url = "user/" + this.bean.user.id + "/student?isRegister=" + this.bean.student.isRegister;
                     axios.get(url).then(function (response) {
                         vue.students = response.data.data;
                         console.log(vue.students);
@@ -141,7 +147,7 @@
                     formData.append("type", this.bean.type.id);
                     formData.append("ispay", this.bean.ispay);
                     axios.post(this.uri, formData).then(function (res) {
-                        if(res.data.code==0)
+                        if (res.data.code == 0)
                             alert("报名成功");
                         else
                             alert(res.data.message);
@@ -167,6 +173,70 @@
             }
         })
     })
+</script>
+
+<script>
+    $(function () {
+        $('form').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+//                valid: 'glyphicon glyphicon-ok',
+//                invalid: 'glyphicon glyphicon-remove',
+//                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+//                名称
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '姓名不能为空'
+                        },
+                        regexp: {
+                            /*中文 2-7位*/
+                            regexp: /^([\u4e00-\u9fa5]){2,7}$/,
+                            message: '请输入正确的姓名'
+                        }
+                    },
+
+
+                },
+                //                性别
+                sex: {
+                    validators: {
+                        notEmpty: {
+                            message: '性别不能为空'
+                        }
+                    }
+                },
+//                年龄
+                age: {
+                    validators: {
+                        notEmpty: {
+                            message: '年龄不能为空'
+                        },
+                        regexp: {
+                            /*年龄1-120*/
+                            regexp: /^(?:[1-9][0-9]?|1[01][0-9]|120)$/,
+                            message: "年龄1-120"
+                        }
+
+                    }
+                },
+                //                地址
+                school: {
+                    validators: {
+                        notEmpty: {
+                            message: "地址不能为空"
+                        }
+                    }
+                }
+            }
+        });
+//        $('#submitbtn').click(function () {
+//            $('form').bootstrapValidator('validate');
+//        })
+    });
+
 </script>
 </html>
 

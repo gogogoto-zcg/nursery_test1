@@ -97,7 +97,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @click="update" data-dismiss="modal">Save changes
+                    <button id="upload" type="button" class="btn btn-primary" @click="update" >Save changes
                     </button>
                 </div>
             </div>
@@ -154,6 +154,14 @@
                     })
                 },
                 update: function () {
+                    /*bootstrap提交验证*/
+                    var validator= $('form').data('bootstrapValidator').validate();
+                    if(!validator.isValid()){
+                        //没有通过校验
+                        return;
+                    } else {
+                        //通过校验，可进行提交等操作
+                    }
                     var formData=new FormData();
                     formData.append("id",this.bean.id);
                     formData.append("name",this.bean.name);
@@ -168,6 +176,8 @@
                         else
                             alert("修改失败")
                     })
+
+                    $('#upload').attr("data-dismiss","modal");
                 },
                 getFile:function (event) {
                     this.file=event.target.files[0];
@@ -182,5 +192,30 @@
             }
         })
     })
+</script>
+
+<!--表单校验-->
+<script>
+    $(function () {
+        $('form').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+//                valid: 'glyphicon glyphicon-ok',
+//                invalid: 'glyphicon glyphicon-remove',
+//                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                /*教学分类*/
+                name:{
+                    validators:{
+                        notEmpty:{
+                            message:'教学性质名称不能为空'
+                        }
+                    }
+                },
+
+            }
+        });
+    });
 </script>
 </html>

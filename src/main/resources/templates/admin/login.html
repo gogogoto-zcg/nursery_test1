@@ -6,21 +6,37 @@
 <!--<link rel="stylesheet" href="webjars/bootstrap/3.0.1/css/bootstrap.min.css">-->
 <!--<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>-->
 
+
+
 <body>
 <div class="container" id="workingArea">
     <h1 align="center">后台登陆</h1>
     <form class="form-signin col-md-offset-4 col-md-4">
-        <h2 class="form-signin-heading" >Please sign in</h2>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input v-model="bean.email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input v-model="bean.password" type="password" id="inputPassword" class="form-control" placeholder="Password" required >
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <div class="form-group">
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input v-model="bean.email" name="username" type="text" id="inputEmail" class="form-control"
+                   placeholder="UserName" required autofocus>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword" class="sr-only">Password</label>
+
+            <input v-model="bean.password" name="password" type="password" id="inputPassword" class="form-control"
+                   placeholder="Password" required>
+        </div>
         <div class="checkbox">
             <label>
                 <input type="checkbox" value="remember-me"> Remember me
             </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" @click="login">Sign in</button>
+        <div class="col-md-6">
+            <button class="btn btn-lg btn-primary btn-block" type="submit" @click="login">Sign in</button>
+        </div>
+        <div class="col-md-6">
+            <button class="btn btn-lg btn-primary btn-block" type="reset" >Reset</button>
+        </div>
+
+
         <!--<button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>-->
     </form>
 
@@ -30,26 +46,80 @@
 </body>
 <script>
     $(function () {
-        var data4Vue={
-            uri:"login",
-            bean:{email:"",password:"",role:"管理员"}
+        var data4Vue = {
+            uri: "login",
+            bean: {email: "", password: "", role: "管理员"}
         };
-        var vue=new Vue({
+        var vue = new Vue({
             el: '#workingArea',
             data: data4Vue,
-            methods:{
-                login:function () {
-                    var url=this.uri;
-                    axios.post(url,this.bean).then(function (response) {
-                        if(response.data.code==0){
+            methods: {
+                login: function () {
+                    /*bootstrap提交验证*/
+                    var validator= $('form').data('bootstrapValidator').validate();
+                    if(!validator.isValid()){
+                        //没有通过校验
+                        return;
+                    } else {
+                        //通过校验，可进行提交等操作
+                    }
+
+
+                    var url = this.uri;
+                    axios.post(url, this.bean).then(function (response) {
+                        if (response.data.code == 0) {
 //                            alert("登陆成功");
-                            location.href="adminHome";
-                        }else
+                            location.href = "adminHome";
+                        } else
                             alert("登陆失败");
                     })
                 }
             }
         })
     })
+</script>
+
+<script>
+    $(function () {
+        $('form').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                /*无法显示注释掉*/
+//                valid: 'glyphicon glyphicon-ok',
+//                invalid: 'glyphicon glyphicon-remove',
+//                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                username: {
+                    message: '用户名验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        },
+//                        stringLength: {
+//                            min: 6,
+//                            max: 18,
+//                            message: '用户名长度必须在6到18位之间'
+//                        },
+//                        regexp: {
+//                            regexp: /^[a-zA-Z0-9_]+$/,
+//                            message: '用户名只能包含大写、小写、数字和下划线'
+//                        }
+                    }
+                },
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+//                        emailAddress: {
+//                            message: '邮箱地址格式有误'
+//                        }
+                    }
+                },
+
+            }
+        });
+    });
 </script>
 </html>

@@ -7,6 +7,7 @@
 <!--<script src="webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>-->
 
 
+
 <body>
 <div id="workingArea" class="container-fluid">
     <!--导航栏-->
@@ -59,7 +60,7 @@
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
                             <div class="col-sm-10">
-                                <input type="email" name="email" v-model="bean.email" class="form-control"
+                                <input type="text" name="username" v-model="bean.email" class="form-control"
                                        id="inputEmail3" placeholder="Email">
                             </div>
                         </div>
@@ -98,7 +99,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @click="update" data-dismiss="modal">Save changes</button>
+                    <button id="upload" type="button" class="btn btn-primary" @click="update" >Save changes</button>
                 </div>
             </div>
         </div>
@@ -132,6 +133,14 @@
                     })
                 },
                 update: function () {
+                    /*bootstrap提交验证*/
+                    var validator= $('form').data('bootstrapValidator').validate();
+                    if(!validator.isValid()){
+                        //没有通过校验
+                        return;
+                    } else {
+                        //通过校验，可进行提交等操作
+                    }
                     var formData=new FormData();
                     formData.append("id",this.bean.id);
                     formData.append("email",this.bean.email);
@@ -147,6 +156,8 @@
                         } else
                             alert("更新失败");
                     })
+                    /*关闭模态框*/
+                    $("#upload").attr("data-dismiss","modal");
                 },
                 getBean: function (id) {
                     var url = this.uri + "/" + id;
@@ -177,4 +188,84 @@
         })
     });
 </script>
+
+
+<!--表单校验-->
+<script>
+    $(function () {
+        $('form').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+//                valid: 'glyphicon glyphicon-ok',
+//                invalid: 'glyphicon glyphicon-remove',
+//                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                username: {
+                    message: '用户名验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 18,
+                            message: '用户名长度必须在6到18位之间'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9_]+$/,
+                            message: '用户名只能包含大写、小写、数字和下划线'
+                        }
+                    }
+                },
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        }
+                    }
+                },
+                phone: {
+                    validators: {
+                        regexp: {
+                            /*手机号1开头，第二位34578 然后11位*/
+                            regexp: /^1[3|4|5|7|8][0-9]{9}$/,
+                            message: '请输入正确的11位手机号码'
+                        }
+                    }
+                },
+                name: {
+                    validators: {
+                        regexp: {
+                            /*中文 2-7位*/
+                            regexp: /^([\u4e00-\u9fa5]){2,7}$/,
+                            message: '请输入正确的姓名'
+                        }
+                    }
+
+                },
+                role: {
+                    message: '角色验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '请选择一个角色类型'
+                        },
+                        callback: {
+//                            message: '必须选择一个文章类型',
+                            callback: function (value, validator) {
+                                if (value == -1) {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
 </html>
