@@ -33,7 +33,7 @@
                 <input type="checkbox" value="remember-me"> Remember me
             </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" @click="login">Sign in</button>
+        <button id="btnSignIn" class="btn btn-lg btn-primary btn-block" type="submit" @click="login">Sign in</button>
         <button class="btn btn-lg btn-primary btn-block" @click="toSignUp">Sign up</button>
         <!--<button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>-->
     </form>
@@ -53,6 +53,14 @@
             data: data4Vue,
             methods: {
                 login: function () {
+                    /*bootstrap提交验证*/
+                    var validator= $('form').data('bootstrapValidator').validate();
+                    if(!validator.isValid()){
+                        //没有通过校验
+                        return;
+                    } else {
+                        //通过校验，可进行提交等操作
+                    }
                     var url = this.uri;
                     axios.post(url, this.bean).then(function (response) {
                         if (response.data.code == 0) {

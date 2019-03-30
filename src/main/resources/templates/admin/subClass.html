@@ -46,10 +46,10 @@
                 </td>
                 <td>
 
-                <div v-if="bean.img!=null">
-                <img height="20px" width="20px" :src="bean.img">
-                </div>
-                <div v-else> null</div>
+                    <div v-if="bean.img!=null">
+                        <img height="20px" width="20px" :src="bean.img">
+                    </div>
+                    <div v-else> null</div>
                 </td>
                 <td><a href="#" @click="deleteBean(bean.id)"><span class="glyphicon glyphicon-trash"></span></a></td>
                 <td><a href="#" @click="getBean(bean.id)" data-toggle="modal" data-target="#myModal"><span
@@ -87,16 +87,16 @@
                             </div>
                         </div>
                         <div class="form-group">
-                        <label class="col-md-4 control-label">宣传图片：</label>
-                        <div class="col-md-6">
-                        <input type="file" @change="getFile($event)" >
-                        </div>
+                            <label class="col-md-4 control-label">宣传图片：</label>
+                            <div class="col-md-6">
+                                <input type="file" @change="getFile($event)">
+                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @click="add" data-dismiss="modal">Post</button>
+                    <button id="add" type="button" class="btn btn-primary" @click="add">Post</button>
                 </div>
             </div>
         </div>
@@ -112,7 +112,7 @@
                     <h4 class="modal-title" id="myModalLabel">修改子分类信息</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal">
+                    <form id="formUpload" class="form-horizontal">
                         <div class="form-group">
                             <label class="col-md-4 control-label">子分类名称：</label>
                             <div class="col-md-6">
@@ -122,21 +122,22 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">子分类描述：</label>
                             <div class="col-md-6">
-                                        <textarea name="description" class="form-control" v-model="bean_get.description">
+                                        <textarea name="description" class="form-control"
+                                                  v-model="bean_get.description">
                                         </textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-4 control-label">宣传图片：</label>
                             <div class="col-md-6">
-                                <input type="file" @change="getFile($event)" >
+                                <input type="file" @change="getFile($event)">
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @click="update" data-dismiss="modal">Modify</button>
+                    <button id="upload" type="button" class="btn btn-primary" @click="update">Modify</button>
                 </div>
             </div>
         </div>
@@ -152,10 +153,10 @@
             uri: "subclass",
             pagination: {},
             beans: [],
-            bean: {id: 0, name: "", description: "",img:"", category: {id: 0}},
-            bean_get: {id: 0, name: "", description: "",img:"", category: {id: 0}},
-            category:{id:0},
-            file:""
+            bean: {id: 0, name: "", description: "", img: "", category: {id: 0}},
+            bean_get: {id: 0, name: "", description: "", img: "", category: {id: 0}},
+            category: {id: 0},
+            file: ""
         };
 
         var vue = new Vue({
@@ -182,11 +183,20 @@
                     })
                 },
                 add: function () {
-                    var formData=new FormData();
-                    formData.append("name",this.bean.name);
-                    formData.append("description",this.bean.description);
-                    formData.append("category",this.bean.category.id);
-                    formData.append("file",this.file);
+                    /*bootstrap提交验证*/
+                    var validator = $('form').data('bootstrapValidator').validate();
+                    if (!validator.isValid()) {
+                        //没有通过校验
+                        return;
+                    } else {
+                        //通过校验，可进行提交等操作
+                        $('#myModal1').modal('hide');
+                    }
+                    var formData = new FormData();
+                    formData.append("name", this.bean.name);
+                    formData.append("description", this.bean.description);
+                    formData.append("category", this.bean.category.id);
+                    formData.append("file", this.file);
                     axios.post(this.uri, formData).then(function (response) {
                         if (response.data.code == 0) {
 //                            alert("增加成功");
@@ -213,12 +223,22 @@
                     })
                 },
                 update: function () {
-                    var formData=new FormData();
-                    formData.append("id",this.bean_get.id);
-                    formData.append("name",this.bean_get.name);
-                    formData.append("description",this.bean_get.description);
-                    formData.append("category",this.bean_get.category.id);
-                    formData.append("file",this.file);
+                    /*bootstrap提交验证*/
+                    var validator = $('#formUpload').data('bootstrapValidator').validate();
+                    if (!validator.isValid()){
+                        //没有通过校验
+                        return;
+                    } else {
+                        //通过校验，可进行提交等操作
+                        /*js实现关闭模态框*/
+                        $('#myModal').modal('hide');
+                    }
+                    var formData = new FormData();
+                    formData.append("id", this.bean_get.id);
+                    formData.append("name", this.bean_get.name);
+                    formData.append("description", this.bean_get.description);
+                    formData.append("category", this.bean_get.category.id);
+                    formData.append("file", this.file);
                     axios.put(this.uri, formData).then(function (response) {
                         if (response.data.code == 0) {
                             vue.list(0);
@@ -226,18 +246,46 @@
                             alert("修改失败");
                     })
                 },
-                getFile:function (event) {
-                    this.file=event.target.files[0];
+                getFile: function (event) {
+                    this.file = event.target.files[0];
                     console.log(this.file);
-                },
+                }
+                ,
                 jump: function (page) {
                     jump(page, vue); //定义在adminHeader.html 中
-                },
+                }
+                ,
                 jumpByNumber: function (start) {
                     jumpByNumber(start, vue);
-                },
+                }
+                ,
             }
         })
     })
+</script>
+
+<!--表单校验-->
+<script>
+    $(function () {
+        $('form').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+//                valid: 'glyphicon glyphicon-ok',
+//                invalid: 'glyphicon glyphicon-remove',
+//                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                /*教学分类*/
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '班级类型不能为空'
+                        }
+                    }
+                },
+
+            }
+        });
+    });
 </script>
 </html>

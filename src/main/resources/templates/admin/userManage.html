@@ -140,6 +140,8 @@
                         return;
                     } else {
                         //通过校验，可进行提交等操作
+                        /*关闭模态框*/
+                        $('#myModal').modal('hide');
                     }
                     var formData=new FormData();
                     formData.append("id",this.bean.id);
@@ -156,8 +158,7 @@
                         } else
                             alert("更新失败");
                     })
-                    /*关闭模态框*/
-                    $("#upload").attr("data-dismiss","modal");
+
                 },
                 getBean: function (id) {
                     var url = this.uri + "/" + id;

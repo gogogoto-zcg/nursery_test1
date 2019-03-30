@@ -247,7 +247,7 @@
                         return;
                     } else {
                         //通过校验，可进行提交等操作
-                        $('#add').attr("data-dismiss","modal");
+                        $('#myModal1').modal("hide");
                     }
                     axios.post(this.uri, this.bean).then(function (response) {
                         if (response.data.code == 0) {
@@ -282,7 +282,7 @@
                         return;
                     } else {
                         //通过校验，可进行提交等操作
-                        $('#upload').attr("data-dismiss","modal");
+                        $('#myModal').modal("hide");
                     }
                     axios.put(this.uri, this.bean_get).then(function (response) {
                         if (response.data.code == 0) {

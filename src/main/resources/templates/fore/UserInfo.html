@@ -113,6 +113,14 @@
                     console.log(this.img_portrait)
                 },
                 update:function () {
+                    /*bootstrap提交验证*/
+                    var validator= $('form').data('bootstrapValidator').validate();
+                    if(!validator.isValid()){
+                        //没有通过校验
+                        return;
+                    } else {
+                        //通过校验，可进行提交等操作
+                    }
                     var formData=new FormData();
                     formData.append("id",this.bean.id);
                     formData.append("email",this.bean.email);

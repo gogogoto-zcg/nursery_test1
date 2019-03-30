@@ -154,6 +154,14 @@
                     })
                 },
                 addStudent: function () {
+                    /*bootstrap提交验证*/
+                    var validator= $('form').data('bootstrapValidator').validate();
+                    if(!validator.isValid()){
+                        //没有通过校验
+                        return;
+                    } else {
+                        //通过校验，可进行提交等操作
+                    }
                     var url = "student";
                     var formData = new FormData();
                     formData.append("name", this.bean.student.name);
