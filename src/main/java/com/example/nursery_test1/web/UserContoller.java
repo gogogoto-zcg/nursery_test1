@@ -60,6 +60,9 @@ public class UserContoller {
      */
     @PostMapping("user")
     public Object userAdd(@RequestBody User bean) {
+        Boolean b=userService.isHavedByNameAndRole(bean);
+        if(b)return Result.fail("用户已存在");
+        else
         userService.add(bean);
         return Result.success();
     }

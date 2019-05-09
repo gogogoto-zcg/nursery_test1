@@ -62,14 +62,15 @@ public class UserService {
         return new Page4Navigator<>(pageFromJPA, navigatePages);
     }
 
-    /*跟据账号邮箱判断是否已经存在*/
-    public boolean isHaved(User bean) {
-        User user = userDAO.findByName(bean.getEmail());
+    /*跟据账号角色判断是否已经存在*/
+    public boolean isHavedByNameAndRole(User bean) {
+        User user = userDAO.findByEmailAndRole(bean.getEmail(),bean.getRole());
         if (user != null)
             return true;
         else
             return false;
     }
+
 
     /*判断是否能够登陆*/
     public boolean judgeIsLogin(User bean, HttpSession session) {

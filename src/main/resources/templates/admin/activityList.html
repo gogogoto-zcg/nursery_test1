@@ -170,7 +170,7 @@
                     }
                     var uid = [[${session.user.id}]];
                     var url = "aClass/" + cid + "/" + this.uri + "?uid=" + uid;
-                    alert(url);
+//                    alert(url);
                     axios.post(url, formData).then(function (res) {
                         if (res.data.code == 0) vue.list(0);
                     })

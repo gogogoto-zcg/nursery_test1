@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -19,7 +23,16 @@ public class NurseryTest1ApplicationTests {
 
     @Test
     public void contextLoads() {
-
+        Date d=new Date();
+        System.out.println(d);
+        String s;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH点mm分ss秒");
+        sdf.format(d);
+        System.out.println("当前时间："+sdf.format(d));
+        Calendar now=Calendar.getInstance();
+        int year=now.get(Calendar.YEAR);
+        int weeks=now.get(Calendar.WEEK_OF_YEAR);
+        System.out.println("今年是"+year+"年的第"+weeks+"周");
     }
 
     @Test
