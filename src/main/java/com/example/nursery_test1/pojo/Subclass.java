@@ -19,6 +19,8 @@ public class Subclass {
 
     private String description;
 
+    private String price;
+
     private String img;
 
     @ManyToOne
@@ -68,7 +70,16 @@ public class Subclass {
     public void setImg(String img) {
         this.img = img;
     }
-    //    @Override
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+//    @Override
 //    public String toString() {
 //        return "Subclass{" +
 //                "id=" + id +

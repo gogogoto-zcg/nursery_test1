@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.io.FileNotFoundException;
 
 @RestController
-public class UserContoller {
+public class UserController {
     @Autowired
     UserService userService;
 
@@ -115,7 +115,7 @@ public class UserContoller {
      */
     @PostMapping("register_1")
     public Object register(@RequestBody User bean) {
-        Boolean b = userService.isHaved(bean);
+        Boolean b = userService.isHavedByNameAndRole(bean);
         if (b) return Result.fail("用户名已存在");
         else {
             userService.add(bean);

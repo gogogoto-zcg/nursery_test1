@@ -24,6 +24,7 @@
                 <th>报名课程</th>
                 <th>报名时间</th>
                 <th>缴费情况</th>
+                <th>缴费金额</th>
                 <!--<th>付款人</th>-->
                 <th>付款时间</th>
                 <th>就读状态</th>
@@ -36,13 +37,14 @@
                 <td>{{bean.type.name}}</td>
                 <td>{{bean.enrolltime|dateformat}}</td>
                 <td v-if="!bean.ispay">
-                    <button class="btn btn-info btn-sm" @click="pay(bean.id)">去付款</button>
+                    <button class="btn btn-info btn-sm" @click="pay(bean)">去付款</button>
                 </td>
                 <td v-else>已支付</td>
+                <td >{{bean.type.price}}</td>
                 <!--<td>{{bean.user.name}}</td>-->
                 <td v-if="!bean.ispay"></td>
                 <td v-else>{{bean.paytime|dateformat}}</td>
-                <td >{{bean.student.state}}</td>
+                <td>{{bean.student.state}}</td>
             </tr>
             </tbody>
         </table>
@@ -65,7 +67,7 @@
             pagination: {},
             beans: [],
             bean: {
-                id: 0, student: {id: 0,state:""}, user: {id: 0}, type: {id: 0}, enrolltime: "", paytime: "", ispay: 0
+                id: 0, student: {id: 0, state: ""}, user: {id: 0}, type: {id: 0}, enrolltime: "", paytime: "", ispay: 0
             }
         };
 
@@ -85,17 +87,34 @@
                         vue.pagination = res.data.data;
                     })
                 },
-                pay: function (id) {
+                /*无支付效果*/
+//                pay: function (id) {
+//                    if (!checkPay()) return;
+//                    var url = this.uri + "/" + id;
+//                    axios.put(url).then(function (res) {
+//                        if (res.data.code == 0) {
+//                            alert("付费成功");
+//                            vue.list(0);
+//                        }
+//
+//                    })
+//                },
+                /*支付宝接口条用*/
+                pay: function (bean) {
                     if (!checkPay()) return;
-                    var url = this.uri + "/" + id;
-                    axios.put(url).then(function (res) {
-                        if (res.data.code == 0){
-                            alert("付费成功");
-                            vue.list(0);
-                        }
-
-                    })
+//                    var url = this.uri + "/" + id;
+//                    http://localhost:8080/alipay/20150320010101001/10.00/0
+                    var url = "alipay/" + bean.id + "/"+bean.type.price +"/0";
+//                    alert(url);
+                    location.href =url;
+//                    axios.get(url).then(function (res) {
+//                        if (res.data.code == 0) {
+//                            alert("付费成功");
+//                            vue.list(0);
+//                        }
+//                    })
                 }
+
             }
         })
     })

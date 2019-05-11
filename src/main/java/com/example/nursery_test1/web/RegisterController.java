@@ -45,10 +45,19 @@ public class RegisterController {
         return Result.success(page);
     }
 
-    /*确认付款*/
-    @PutMapping("register/{id}")
-    public Object updateIsPay(@PathVariable("id") int id){
-        registerService.updateIsPay(id);
-        return Result.success();
-    }
+//    /*确认付款*/
+//    @GetMapping("register/{id}")
+//    public String updateIsPay(@PathVariable("id") String id){
+//        int oid=Integer.parseInt(id);
+//        registerService.updateIsPay(oid);
+//        return "付款成功";
+//    }
+
+//    /*确认付款*/
+//    @RequestMapping("register/{id}")
+//    public String updateIsPay(@PathVariable("id") String id){
+//        int oid=Integer.parseInt(id);
+//        registerService.updateIsPay(oid);
+//        return "fore/myRegister";
+//    }
 }

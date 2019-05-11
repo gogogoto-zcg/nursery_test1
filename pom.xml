@@ -69,6 +69,20 @@
             <version>3.0.1</version>
         </dependency>
 
+        <!-- 支付宝 -->
+        <dependency>
+        <groupId>net.guerlab</groupId>
+        <artifactId>sdk-alipay-starter</artifactId>
+        <version>1.0.3</version>
+        </dependency>
+
+        <!-- 引入org.json所需依赖 -->
+        <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>20160810</version>
+        </dependency>
+
 
     </dependencies>
 

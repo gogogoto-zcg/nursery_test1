@@ -31,7 +31,9 @@
                 <th>ID</th>
                 <th>子分类名称</th>
                 <th>子分类描述</th>
+                <th>报名费用</th>
                 <th>宣传图片</th>
+
                 <th>删除</th>
                 <th>编辑</th>
             </tr>
@@ -44,8 +46,8 @@
                     <p style="width: 200px;white-space: nowrap;text-overflow: ellipsis; overflow: hidden;"
                        :title="bean.description">{{bean.description}}</p>
                 </td>
+                <td>{{bean.price}}</td>
                 <td>
-
                     <div v-if="bean.img!=null">
                         <img height="20px" width="20px" :src="bean.img">
                     </div>
@@ -84,6 +86,13 @@
                             <div class="col-md-6">
                                         <textarea name="description" class="form-control" v-model="bean.description">
                                         </textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">子分类报名费：</label>
+                            <div class="col-md-6">
+                                <input name="price" class="form-control" v-model="bean.price"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -128,6 +137,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-4 control-label">子分类报名费：</label>
+                            <div class="col-md-6">
+                                <input name="price" class="form-control" v-model="bean_get.price"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-4 control-label">宣传图片：</label>
                             <div class="col-md-6">
                                 <input type="file" @change="getFile($event)">
@@ -153,8 +168,8 @@
             uri: "subclass",
             pagination: {},
             beans: [],
-            bean: {id: 0, name: "", description: "", img: "", category: {id: 0}},
-            bean_get: {id: 0, name: "", description: "", img: "", category: {id: 0}},
+            bean: {id: 0, name: "", description: "", img: "", price: "", category: {id: 0}},
+            bean_get: {id: 0, name: "", description: "", img: "", price: "", category: {id: 0}},
             category: {id: 0},
             file: ""
         };
@@ -194,6 +209,7 @@
                     }
                     var formData = new FormData();
                     formData.append("name", this.bean.name);
+                    formData.append("price", this.bean.price);
                     formData.append("description", this.bean.description);
                     formData.append("category", this.bean.category.id);
                     formData.append("file", this.file);
@@ -225,7 +241,7 @@
                 update: function () {
                     /*bootstrap提交验证*/
                     var validator = $('#formUpload').data('bootstrapValidator').validate();
-                    if (!validator.isValid()){
+                    if (!validator.isValid()) {
                         //没有通过校验
                         return;
                     } else {
@@ -236,6 +252,7 @@
                     var formData = new FormData();
                     formData.append("id", this.bean_get.id);
                     formData.append("name", this.bean_get.name);
+                    formData.append("price", this.bean_get.price);
                     formData.append("description", this.bean_get.description);
                     formData.append("category", this.bean_get.category.id);
                     formData.append("file", this.file);
@@ -283,6 +300,20 @@
                         }
                     }
                 },
+                price:{
+                    validators: {
+                        notEmpty: {
+                            message: '报名费用不能为空'
+                        },
+
+                    regexp: {
+                        /*数字约束*/
+                        regexp: /^[0-9]*$/,
+                        message: '请输入数字'
+                    }
+                }
+                }
+
 
             }
         });
