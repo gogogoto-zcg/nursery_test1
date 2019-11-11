@@ -15,6 +15,7 @@ public class Activity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int didi;
+    private int dada;
     private String introduce;
     private Date uploadTime;
     @ManyToOne
