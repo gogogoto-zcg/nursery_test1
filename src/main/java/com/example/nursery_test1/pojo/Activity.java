@@ -17,6 +17,7 @@ public class Activity {
     private int didi;
     private String introduce;
     private Date uploadTime;
+    private String name;
     @ManyToOne
     @JoinColumn(name="uid")
     private User user;
