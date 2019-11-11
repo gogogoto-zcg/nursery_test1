@@ -20,6 +20,7 @@ public class Activity {
     private Date uploadTime;
 
     ///
+    private String name;
     @ManyToOne
     @JoinColumn(name="uid")
     private User user;
