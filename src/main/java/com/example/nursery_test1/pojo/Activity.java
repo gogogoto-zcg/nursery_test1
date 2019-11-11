@@ -18,6 +18,8 @@ public class Activity {
     private int dada;
     private String introduce;
     private Date uploadTime;
+
+    ///
     @ManyToOne
     @JoinColumn(name="uid")
     private User user;
